@@ -94,6 +94,178 @@ def draw_legend(c, items, x, y, sw=8, gap=62):
         draw_text(c, xx + sw + 3, y - 1, label, size=7.0)
 
 
+def draw_panel_label(c, x, y, label, title):
+    c.setFillColor(colors.black)
+    c.circle(x + 6, y - 5, 5.2, fill=1, stroke=0)
+    draw_text(c, x + 6, y - 8, label, size=7.2, font="Times-Bold", color=colors.white, anchor="middle")
+    draw_text(c, x + 16, y - 8, title, size=8.5, font="Times-Bold")
+
+
+def draw_box(c, x, y, w, h, text, fill, stroke=HexColor("#444444"), size=7.1):
+    c.setFillColor(fill)
+    c.setStrokeColor(stroke)
+    c.setLineWidth(0.45)
+    c.roundRect(x, y, w, h, 4, fill=1, stroke=1)
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        draw_text(c, x + w / 2, y + h / 2 + (len(lines) - 1) * 4 - i * 8, line, size=size, anchor="middle")
+
+
+def draw_arrow(c, x1, y1, x2, y2):
+    c.setStrokeColor(HexColor("#555555"))
+    c.setLineWidth(0.65)
+    c.line(x1, y1, x2, y2)
+    angle = 0 if x2 >= x1 else 3.14159
+    c.setFillColor(HexColor("#555555"))
+    if abs(x2 - x1) >= abs(y2 - y1):
+        c.line(x2, y2, x2 - 4, y2 + 2.5)
+        c.line(x2, y2, x2 - 4, y2 - 2.5)
+    else:
+        c.line(x2, y2, x2 - 2.5, y2 - 4)
+        c.line(x2, y2, x2 + 2.5, y2 - 4)
+
+
+def blend(c1, c2, t):
+    return colors.Color(
+        c1.red + (c2.red - c1.red) * t,
+        c1.green + (c2.green - c1.green) * t,
+        c1.blue + (c2.blue - c1.blue) * t,
+    )
+
+
+def heat_color(value, lo=0.50, hi=0.80):
+    t = max(0, min(1, (value - lo) / (hi - lo)))
+    return blend(HexColor("#F3F6FB"), HexColor("#0072B2"), t)
+
+
+def fig_main_composite():
+    W, H = 7.05 * inch, 5.55 * inch
+    c = canvas.Canvas(str(FIG_DIR / "fig_summary_main_composite.pdf"), pagesize=(W, H))
+    margin_x, top = 0.36 * inch, H - 0.28 * inch
+    panel_w, panel_h = 3.02 * inch, 2.18 * inch
+    gap_x, gap_y = 0.37 * inch, 0.34 * inch
+    xL, xR = margin_x, margin_x + panel_w + gap_x
+    yT = top - panel_h
+    yB = yT - gap_y - panel_h
+
+    # Panel a: compact evidence flow.
+    draw_panel_label(c, xL, yT + panel_h, "a", "Compact narrative as the interface")
+    box_y = yT + panel_h - 0.66 * inch
+    boxes = [
+        (xL + 0.04 * inch, box_y, 0.64 * inch, 0.36 * inch, "43.6M\nICU events", HexColor("#E8EDF7")),
+        (xL + 0.89 * inch, box_y, 0.76 * inch, 0.36 * inch, "ClinTime\nSummary", HexColor("#DCEFE8")),
+        (xL + 1.87 * inch, box_y, 0.68 * inch, 0.36 * inch, "Llama-3\nQLoRA", HexColor("#FCE4D6")),
+        (xL + 2.75 * inch, box_y, 0.50 * inch, 0.36 * inch, "Risk\nscores", HexColor("#EFE5F4")),
+    ]
+    for i, (x, y, w, h, text, fill) in enumerate(boxes):
+        draw_box(c, x, y, w, h, text, fill)
+        if i:
+            prev = boxes[i - 1]
+            draw_arrow(c, prev[0] + prev[2] + 4, y + h / 2, x - 4, y + h / 2)
+    chips = [
+        ("trend", "#DCEFE8"), ("abnormality", "#FCE4D6"), ("intervention", "#EFE5F4"),
+        ("source IDs", "#E8EDF7"), ("concept priority", "#FFF2CC"), ("short text", "#E6E6E6"),
+    ]
+    chip_x, chip_y = xL + 0.10 * inch, yT + 0.80 * inch
+    for i, (label, fill) in enumerate(chips):
+        xx = chip_x + (i % 3) * 0.94 * inch
+        yy = chip_y - (i // 3) * 0.29 * inch
+        draw_box(c, xx, yy, 0.80 * inch, 0.18 * inch, label, HexColor(fill), size=6.7)
+    draw_text(c, xL + 0.12 * inch, yT + 0.26 * inch, "Claim: compact clinical narration is learnable,", size=7.4)
+    draw_text(c, xL + 0.12 * inch, yT + 0.13 * inch, "reusable across ICU tasks, and bounded by domain shift.", size=7.4)
+
+    # Panel b: mortality scaling small multiples.
+    draw_panel_label(c, xR, yT + panel_h, "b", "Mortality scaling and seed stability")
+    rows = DATA["mortality_scaling"]
+    centers = ["MIMIC-IV", "eICU", "NWICU"]
+    settings = ["5k", "10k", "20k"]
+    y_min, y_max = 0.44, 0.84
+    mini_w, mini_h = 0.83 * inch, 1.10 * inch
+    for idx, center in enumerate(centers):
+        x0 = xR + 0.18 * inch + idx * 0.92 * inch
+        y0 = yT + 0.52 * inch
+        xs = [x0 + mini_w * p for p in (0.12, 0.50, 0.88)]
+        draw_axes(c, x0, y0, mini_w, mini_h, y_min, y_max, y_label="AUROC" if idx == 0 else None,
+                  x_ticks=xs, x_labels=settings)
+        draw_text(c, x0 + 3, y0 + mini_h - 8, center, size=6.9, font="Times-Bold")
+        values_by_setting = defaultdict(list)
+        for row in rows:
+            if row["center"] == center:
+                values_by_setting[row["setting"]].append(row["auroc"])
+        means = [mean(values_by_setting[s]) for s in settings]
+        pts = [(x, ymap(v, y0, mini_h, y_min, y_max)) for x, v in zip(xs, means)]
+        c.setStrokeColor(COLORS[center])
+        c.setLineWidth(1.0)
+        for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
+            c.line(x1, y1, x2, y2)
+        for i, setting in enumerate(settings):
+            vals = values_by_setting[setting]
+            offsets = [-2.5, 0, 2.5] if len(vals) == 3 else ([0] if len(vals) == 1 else [-2, 2])
+            for off, val in zip(offsets, vals):
+                c.setFillColor(colors.white)
+                c.setStrokeColor(COLORS[center])
+                c.circle(xs[i] + off, ymap(val, y0, mini_h, y_min, y_max), 1.9, fill=1, stroke=1)
+        c.setStrokeColor(HexColor("#555555"))
+        c.setDash(2, 2)
+        c.line(x0, ymap(0.5, y0, mini_h, y_min, y_max), x0 + mini_w, ymap(0.5, y0, mini_h, y_min, y_max))
+        c.setDash()
+    draw_text(c, xR + panel_w / 2, yT + 0.22 * inch, "MIMIC train records", size=7.2, anchor="middle")
+
+    # Panel c: multitask heat map with 5k to 10k deltas.
+    draw_panel_label(c, xL, yB + panel_h, "c", "Multitask reuse of the same format")
+    mt = DATA["multitask"]
+    tasks = ["LOS >48h", "Future intervention"]
+    centers = ["MIMIC-IV", "eICU", "NWICU"]
+    cell_w, cell_h = 0.68 * inch, 0.34 * inch
+    start_x, start_y = xL + 0.92 * inch, yB + 1.29 * inch
+    for ci, center in enumerate(centers):
+        draw_text(c, start_x + ci * cell_w + cell_w / 2, start_y + 0.25 * inch, center, size=7.1, font="Times-Bold", anchor="middle")
+    for ti, task in enumerate(tasks):
+        y = start_y - ti * 0.58 * inch
+        draw_text(c, xL + 0.10 * inch, y + 0.12 * inch, task, size=7.2, font="Times-Bold")
+        for ci, center in enumerate(centers):
+            vals = {}
+            for train in ["5k", "10k"]:
+                vals[train] = [r for r in mt if r["task"] == task and r["center"] == center and r["train_records"] == train][0]["auroc"]
+            x = start_x + ci * cell_w
+            c.setFillColor(heat_color(vals["10k"]))
+            c.setStrokeColor(colors.white)
+            c.rect(x, y, cell_w - 2, cell_h, fill=1, stroke=1)
+            txt = f"{vals['5k']:.2f}->{vals['10k']:.2f}"
+            draw_text(c, x + cell_w / 2 - 1, y + 0.12 * inch, txt, size=6.6, anchor="middle",
+                      color=colors.white if vals["10k"] > 0.68 else colors.black)
+    draw_text(c, xL + 0.10 * inch, yB + 0.33 * inch, "Cells show AUROC change from 5k to 10k training records.", size=7.2)
+    for i, val in enumerate([0.50, 0.65, 0.80]):
+        xx = xL + 1.65 * inch + i * 0.35 * inch
+        c.setFillColor(heat_color(val))
+        c.rect(xx, yB + 0.13 * inch, 0.28 * inch, 0.10 * inch, fill=1, stroke=0)
+        draw_text(c, xx + 0.14 * inch, yB + 0.03 * inch, f"{val:.2f}", size=6.2, anchor="middle")
+
+    # Panel d: positioning bars.
+    draw_panel_label(c, xR, yB + panel_h, "d", "Where Summary sits relative to baselines")
+    pos = DATA["diagnostic_positioning"]
+    methods = ["Short-context XML", "ClinTime-Summary", "HistGBDT reference"]
+    x0, y0, w, h = xR + 0.33 * inch, yB + 0.50 * inch, 2.38 * inch, 1.20 * inch
+    y_min, y_max = 0.45, 0.89
+    groups = [x0 + w * p for p in (0.18, 0.50, 0.82)]
+    draw_axes(c, x0, y0, w, h, y_min, y_max, y_label="AUROC", x_ticks=groups, x_labels=centers)
+    bw = 9
+    for gi, center in enumerate(centers):
+        for mi, method in enumerate(methods):
+            val = [r for r in pos if r["method"] == method and r["center"] == center][0]["auroc"]
+            x = groups[gi] + (mi - 1) * (bw + 2)
+            y = ymap(val, y0, h, y_min, y_max)
+            c.setFillColor(COLORS[method])
+            c.setStrokeColor(colors.black)
+            c.setLineWidth(0.25)
+            c.rect(x - bw / 2, y0, bw, y - y0, fill=1, stroke=1)
+    draw_legend(c, [(m, COLORS[m]) for m in methods], xR + 0.22 * inch, yB + 0.23 * inch, sw=6, gap=68)
+
+    c.showPage()
+    c.save()
+    print("Saved", FIG_DIR / "fig_summary_main_composite.pdf")
+
+
 def fig_mortality_scaling():
     rows = DATA["mortality_scaling"]
     centers = ["MIMIC-IV", "eICU", "NWICU"]
@@ -226,6 +398,7 @@ def fig_diagnostic_positioning():
 
 
 if __name__ == "__main__":
+    fig_main_composite()
     fig_mortality_scaling()
     fig_multitask()
     fig_diagnostic_positioning()
