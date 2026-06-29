@@ -46,5 +46,13 @@
     {"method": "Short-context XML", "center": "NWICU", "auroc": 0.5103, "note": "best diagnostic matrix run, 1k train, 256 tokens"},
     {"method": "ClinTime-Summary", "center": "NWICU", "auroc": 0.6252, "note": "20k mean over seeds 42/43/44"},
     {"method": "HistGBDT reference", "center": "NWICU", "auroc": 0.8560, "note": "supervised data-validity reference"}
+  ],
+  "claim_radar": [
+    {"axis": "Mortality\nMIMIC", "auroc": 0.7756, "note": "20k mean over seeds 42/43/44"},
+    {"axis": "Mortality\nExternal", "auroc": 0.5860, "note": "20k mean over eICU/NWICU and seeds 42/43/44"},
+    {"axis": "LOS\nMIMIC", "auroc": 0.6193, "note": "10k seed42"},
+    {"axis": "LOS\nExternal", "auroc": 0.5435, "note": "10k eICU/NWICU mean"},
+    {"axis": "Future\nMIMIC", "auroc": 0.8000, "note": "10k seed42"},
+    {"axis": "Future\nExternal", "auroc": 0.5197, "note": "10k eICU/NWICU mean"}
   ]
 }

@@ -1,4 +1,5 @@
 import json
+import math
 from collections import defaultdict
 from pathlib import Path
 
@@ -138,9 +139,62 @@ def heat_color(value, lo=0.50, hi=0.80):
     return blend(HexColor("#F3F6FB"), HexColor("#0072B2"), t)
 
 
+def draw_radar(c, cx, cy, radius, rows, v_min=0.50, v_max=0.85):
+    n = len(rows)
+    angles = [math.pi / 2 - 2 * math.pi * i / n for i in range(n)]
+    rings = [0.55, 0.65, 0.75, 0.85]
+
+    c.setStrokeColor(HexColor("#D8D8D8"))
+    c.setLineWidth(0.35)
+    for ring in rings:
+        rr = radius * (ring - v_min) / (v_max - v_min)
+        pts = [(cx + rr * math.cos(a), cy + rr * math.sin(a)) for a in angles]
+        for p1, p2 in zip(pts, pts[1:] + pts[:1]):
+            c.line(p1[0], p1[1], p2[0], p2[1])
+        draw_text(c, cx + rr + 2, cy - 2, f"{ring:.2f}", size=5.4, color=HexColor("#777777"))
+
+    c.setStrokeColor(HexColor("#BBBBBB"))
+    for a in angles:
+        c.line(cx, cy, cx + radius * math.cos(a), cy + radius * math.sin(a))
+
+    poly = []
+    for row, a in zip(rows, angles):
+        value = row["auroc"]
+        rr = radius * (value - v_min) / (v_max - v_min)
+        poly.append((cx + rr * math.cos(a), cy + rr * math.sin(a), value))
+
+    path = c.beginPath()
+    path.moveTo(poly[0][0], poly[0][1])
+    for x, y, _ in poly[1:]:
+        path.lineTo(x, y)
+    path.close()
+    c.setFillColor(colors.Color(0.0, 0.45, 0.70, alpha=0.18))
+    c.setStrokeColor(COLORS["ClinTime-Summary"])
+    c.setLineWidth(1.1)
+    c.drawPath(path, fill=1, stroke=1)
+
+    for x, y, value in poly:
+        c.setFillColor(colors.white)
+        c.setStrokeColor(COLORS["ClinTime-Summary"])
+        c.circle(x, y, 2.2, fill=1, stroke=1)
+        draw_text(c, x, y + 4.5, f"{value:.2f}", size=5.8, anchor="middle")
+
+    for row, a in zip(rows, angles):
+        lx = cx + (radius + 0.20 * inch) * math.cos(a)
+        ly = cy + (radius + 0.14 * inch) * math.sin(a)
+        anchor = "middle"
+        if math.cos(a) > 0.35:
+            anchor = "start"
+        elif math.cos(a) < -0.35:
+            anchor = "end"
+        lines = row["axis"].split("\n")
+        for i, line in enumerate(lines):
+            draw_text(c, lx, ly - i * 7, line, size=6.3, anchor=anchor)
+
+
 def fig_main_composite():
     W, H = 7.05 * inch, 5.55 * inch
-    c = canvas.Canvas(str(FIG_DIR / "fig_summary_main_composite.pdf"), pagesize=(W, H))
+    c = canvas.Canvas(str(FIG_DIR / "fig_summary_main_composite_radar.pdf"), pagesize=(W, H))
     margin_x, top = 0.36 * inch, H - 0.28 * inch
     panel_w, panel_h = 3.02 * inch, 2.18 * inch
     gap_x, gap_y = 0.37 * inch, 0.34 * inch
@@ -148,31 +202,9 @@ def fig_main_composite():
     yT = top - panel_h
     yB = yT - gap_y - panel_h
 
-    # Panel a: compact evidence flow.
-    draw_panel_label(c, xL, yT + panel_h, "a", "Compact narrative as the interface")
-    box_y = yT + panel_h - 0.66 * inch
-    boxes = [
-        (xL + 0.04 * inch, box_y, 0.64 * inch, 0.36 * inch, "43.6M\nICU events", HexColor("#E8EDF7")),
-        (xL + 0.89 * inch, box_y, 0.76 * inch, 0.36 * inch, "ClinTime\nSummary", HexColor("#DCEFE8")),
-        (xL + 1.87 * inch, box_y, 0.68 * inch, 0.36 * inch, "Llama-3\nQLoRA", HexColor("#FCE4D6")),
-        (xL + 2.75 * inch, box_y, 0.50 * inch, 0.36 * inch, "Risk\nscores", HexColor("#EFE5F4")),
-    ]
-    for i, (x, y, w, h, text, fill) in enumerate(boxes):
-        draw_box(c, x, y, w, h, text, fill)
-        if i:
-            prev = boxes[i - 1]
-            draw_arrow(c, prev[0] + prev[2] + 4, y + h / 2, x - 4, y + h / 2)
-    chips = [
-        ("trend", "#DCEFE8"), ("abnormality", "#FCE4D6"), ("intervention", "#EFE5F4"),
-        ("source IDs", "#E8EDF7"), ("concept priority", "#FFF2CC"), ("short text", "#E6E6E6"),
-    ]
-    chip_x, chip_y = xL + 0.10 * inch, yT + 0.80 * inch
-    for i, (label, fill) in enumerate(chips):
-        xx = chip_x + (i % 3) * 0.94 * inch
-        yy = chip_y - (i // 3) * 0.29 * inch
-        draw_box(c, xx, yy, 0.80 * inch, 0.18 * inch, label, HexColor(fill), size=6.7)
-    draw_text(c, xL + 0.12 * inch, yT + 0.26 * inch, "Claim: compact clinical narration is learnable,", size=7.4)
-    draw_text(c, xL + 0.12 * inch, yT + 0.13 * inch, "reusable across ICU tasks, and bounded by domain shift.", size=7.4)
+    # Panel a: result radar for the actual paper claim.
+    draw_panel_label(c, xL, yT + panel_h, "a", "AUROC profile of the Summary claim")
+    draw_radar(c, xL + 1.54 * inch, yT + 1.06 * inch, 0.70 * inch, DATA["claim_radar"])
 
     # Panel b: mortality scaling small multiples.
     draw_panel_label(c, xR, yT + panel_h, "b", "Mortality scaling and seed stability")
@@ -263,7 +295,7 @@ def fig_main_composite():
 
     c.showPage()
     c.save()
-    print("Saved", FIG_DIR / "fig_summary_main_composite.pdf")
+    print("Saved", FIG_DIR / "fig_summary_main_composite_radar.pdf")
 
 
 def fig_mortality_scaling():
