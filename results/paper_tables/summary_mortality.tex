@@ -1,0 +1,20 @@
+\begin{table}[t]
+\caption{ClinTime-Summary mortality prediction with Llama-3-8B at 2048 tokens. Each model is trained on MIMIC-IV and evaluated on 500 records per center. Cells show AUROC.}
+\label{tab:summary_mortality}
+\centering
+\small
+\setlength{\tabcolsep}{3.4pt}
+\begin{tabular}{lccc}
+\toprule
+Setting & MIMIC-IV & eICU & NWICU \\
+\midrule
+5k seed42 & .6950 & .4753 & .6091 \\
+5k seed43 & .7188 & .5453 & .5712 \\
+5k seed44 & .7089 & .4959 & .5857 \\
+10k seed42 & .7034 & .5174 & .6377 \\
+20k seed42 & .7780 & .4673 & .6086 \\
+20k seed43 & .7875 & .5897 & .6585 \\
+20k seed44 & .7614 & .5832 & .6085 \\
+\bottomrule
+\end{tabular}
+\end{table}
