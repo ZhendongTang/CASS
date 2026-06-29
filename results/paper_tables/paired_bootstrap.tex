@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\caption{Paired patient-level bootstrap contrasts (2,000 resamples). Values are mean deltas with 95\% confidence intervals. Negative Brier deltas are favorable.}
+\label{tab:bootstrap}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4.0pt}
+\begin{tabular}{llccc}
+\toprule
+Backbone & Center & XML--Flat AUROC & XML+KL--XML-Aug AUROC & XML+KL--XML-Aug Brier \\
+\midrule
+GLM & MIMIC & +.089 [-.002,.171] & -.005 [-.015,.006] & -.0007 [-.0015,.0001] \\
+GLM & eICU  & -.011 [-.112,.085] & -.001 [-.008,.007] & -.0019 [-.0026,-.0012] \\
+GLM & NWICU & +.014 [-.054,.084] & +.002 [-.006,.009] & -.0019 [-.0027,-.0012] \\
+Llama & MIMIC & +.071 [-.006,.152] & +.005 [-.006,.016] & -.0002 [-.0006,.0003] \\
+Llama & eICU  & +.005 [-.072,.080] & -.001 [-.014,.014] & -.0002 [-.0007,.0004] \\
+Llama & NWICU & -.024 [-.094,.045] & +.006 [-.001,.014] & -.0013 [-.0018,-.0007] \\
+Gemma & MIMIC & +.026 [-.048,.092] & -.015 [-.042,.011] & -.0008 [-.0020,.0004] \\
+Gemma & eICU  & +.051 [-.018,.122] & -.020 [-.055,.012] & -.0003 [-.0026,.0021] \\
+Gemma & NWICU & -.009 [-.102,.082] & -.012 [-.033,.010] & -.0014 [-.0028,-.0002] \\
+\bottomrule
+\end{tabular}
+\end{table*}

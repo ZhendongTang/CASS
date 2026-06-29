@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\caption{Matched data-validity reference and zero-shot discrimination. Cells are AUROC / AUPRC on 100 fixed patients per center. The supervised and zero-shot protocols are not directly comparable.}
+\label{tab:zeroshot}
+\centering
+\small
+\begin{tabular}{llccc}
+\toprule
+Protocol & Representation & MIMIC-IV & eICU & NWICU \\
+\midrule
+HistGBDT & Aggregate features & .833 / .519 & .789 / .539 & .856 / .489 \\
+\midrule
+DeepSeek, zero-shot & Flat & .628 / .367 & .715 / .307 & .716 / .368 \\
+& PCES, 3 views & .634 / .328 & .758 / .375 & .719 / .353 \\
+& ClinTime-XML, 3 views & .682 / .355 & .679 / .384 & .815 / .461 \\
+& Canonical XML & .647 / .316 & .627 / .320 & .756 / .379 \\
+\bottomrule
+\end{tabular}
+\end{table*}

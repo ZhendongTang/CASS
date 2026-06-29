@@ -1,0 +1,13 @@
+{
+  "seed": 43,
+  "hidden_size": 192,
+  "layers": 4,
+  "heads": 6,
+  "dropout": 0.1,
+  "max_length": 512,
+  "batch_size": 32,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.01,
+  "epochs": 20,
+  "patience": 4
+}

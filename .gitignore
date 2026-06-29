@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Local data, outputs, and model artifacts
+work/
+data/
+checkpoints/
+outputs/
+runs/
+adapter/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.pkl
+*.npy
+*.npz
+*.jsonl
+*.jsonl.gz
+predictions*.jsonl
+responses.jsonl
+
+# Secrets and credentials
+.env
+.env.*
+*.key
+*.pem
+*apikey*
+*api_key*
+*token*
+*credential*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+~$*
