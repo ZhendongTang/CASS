@@ -25,6 +25,7 @@ def svg_open(w=1200, h=520):
     return [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}">',
         "<defs>",
+        '<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#6B7280"/></marker>',
         '<style><![CDATA[text{font-family:Arial,Helvetica,sans-serif;fill:#1F2937}.small{font-size:18px}.tiny{font-size:15px;fill:#4B5563}.panel{font-size:20px;font-weight:700}.value{font-size:17px;font-weight:700}.axis{stroke:#D1D5DB;stroke-width:1}.bartext{font-size:15px;fill:#1F2937}]]></style>',
         "</defs>",
         f'<rect x="0" y="0" width="{w}" height="{h}" fill="white"/>',
@@ -56,39 +57,85 @@ def bar(ax, x, y0, width, value, scale, color, label=None):
 
 
 def fig1():
-    parts = svg_open()
-    parts += [text(35, 45, "a", "panel"), text(75, 45, "Event stream to CASS", "panel")]
-    x0, y0 = 55, 90
-    for i, lab in enumerate(["labs", "vitals", "infusions", "procedures"]):
-        parts.append(rect(x0, y0 + i * 48, 165, 30, COLORS["light"], COLORS["line"], 5))
-        parts.append(text(x0 + 82, y0 + i * 21 + 20, lab, "tiny", "middle"))
-    parts += [line(245, 160, 330, 160, COLORS["gray"], 2), text(285, 142, "aggregate", "tiny", "middle")]
-    parts.append(rect(350, 93, 270, 160, "#EEF6FB", COLORS["blue"], 8))
-    for i, lab in enumerate(["count/range", "first/last", "trend", "abnormality", "source"]):
-        parts.append(text(385, 125 + i * 25, lab, "tiny"))
-    parts += [line(640, 160, 720, 160, COLORS["gray"], 2), text(680, 142, "serialize", "tiny", "middle")]
-    parts.append(rect(740, 93, 380, 160, "#F4F1FA", COLORS["purple"], 8))
-    parts.append(text(765, 128, "MAP: 12 obs, nadir 54, falling, hypotensive", "tiny"))
-    parts.append(text(765, 158, "HR: 18 obs, 82-124, rising, last 121", "tiny"))
-    parts.append(text(765, 188, "Ventilation: invasive support from hour 2", "tiny"))
-    parts.append(text(765, 218, "Vasopressor: norepinephrine started hour 4", "tiny"))
+    parts = svg_open(1200, 560)
 
-    parts += [text(35, 325, "b", "panel"), text(75, 325, "Source-center AUROC", "panel")]
-    base_y, scale = 470, 250
-    vals = [("Mortality", 0.776, COLORS["blue"]), ("LOS", 0.619, COLORS["orange"]), ("Future", 0.806, COLORS["green"])]
-    parts += [line(80, base_y, 505, base_y), line(80, base_y - 200, 80, base_y)]
-    for i, (lab, val, col) in enumerate(vals):
-        parts += bar(parts, 135 + i * 125, base_y, 60, val, scale, col, lab)
-    parts.append(text(83, base_y - 205, "1.0", "tiny"))
-    parts.append(text(83, base_y - 105, "0.5", "tiny"))
+    # Left: heterogeneous, partially ordered ICU events.
+    parts.append(text(58, 58, "a", "panel"))
+    parts.append(text(92, 58, "Partially ordered ICU event stream", "panel"))
+    parts.append(rect(58, 88, 285, 255, "#F7F8FA", COLORS["line"], 8))
+    parts.append(line(95, 132, 95, 306, COLORS["gray"], 2))
+    for y, hour in [(132, "0h"), (190, "2h"), (248, "4h"), (306, "6h")]:
+        parts.append(f'<circle cx="95" cy="{y}" r="5" fill="{COLORS["gray"]}"/>')
+        parts.append(text(70, y + 5, hour, "tiny", "end"))
+    events = [
+        (124, 112, "lab", "lactate 4.0", COLORS["orange"]),
+        (174, 147, "vital", "MAP 58", COLORS["blue"]),
+        (126, 183, "vital", "HR 121", COLORS["blue"]),
+        (188, 219, "device", "ventilation", COLORS["purple"]),
+        (130, 255, "drug", "norepinephrine", COLORS["green"]),
+        (196, 291, "procedure", "arterial line", COLORS["gray"]),
+    ]
+    for x, y, typ, val, col in events:
+        parts.append(rect(x, y, 130, 28, "white", col, 5))
+        parts.append(text(x + 10, y + 19, f"{typ}: {val}", "tiny"))
+    parts.append(text(72, 372, "Same-time rows may have no clinical internal order.", "tiny"))
+    parts.append(text(72, 396, "Fixed bins blur timing; imputation can add artificial values.", "tiny"))
 
-    parts += [text(615, 325, "c", "panel"), text(655, 325, "Claim boundary", "panel")]
-    rows = [("compact", "681 mean tokens, 0.0% truncation", COLORS["green"]), ("effective", "20k mortality AUROC .761-.787", COLORS["blue"]), ("reusable", "mortality, LOS, future intervention", COLORS["purple"]), ("bounded", "external transfer remains mixed", COLORS["orange"])]
-    for i, (k, v, col) in enumerate(rows):
-        y = 355 + i * 38
-        parts.append(rect(655, y, 110, 25, col, rx=12))
-        parts.append(text(710, y + 18, k, "tiny", "middle"))
-        parts.append(text(790, y + 18, v, "tiny"))
+    # Middle: CASS serialization.
+    parts.append(f'<path d="M365 215 C405 215, 410 215, 450 215" fill="none" stroke="{COLORS["gray"]}" stroke-width="2.4" marker-end="url(#arrow)"/>')
+    parts.append(text(400, 195, "aggregate", "tiny", "middle"))
+    parts.append(text(465, 58, "b", "panel"))
+    parts.append(text(498, 58, "CASS serialization", "panel"))
+    parts.append(rect(455, 88, 315, 255, "#EEF6FB", COLORS["blue"], 8))
+    features = [
+        ("bind", "concept + value + unit + source"),
+        ("compress", "count, range, first/last, trend"),
+        ("prioritize", "intervention, abnormality, recent change"),
+    ]
+    for i, (k, v) in enumerate(features):
+        y = 112 + i * 43
+        parts.append(rect(485, y, 86, 25, "#D7ECF8", "none", 13))
+        parts.append(text(528, y + 18, k, "tiny", "middle"))
+        parts.append(text(585, y + 18, v, "tiny"))
+    parts.append(rect(485, 245, 250, 68, "white", COLORS["line"], 6))
+    parts.append(text(503, 267, "MAP: 12 obs, 54-86 mmHg, falling", "tiny"))
+    parts.append(text(503, 289, "lactate: 2 obs, rising, abnormal high", "tiny"))
+    parts.append(text(503, 311, "ventilation + vasopressor started", "tiny"))
+
+    # Right: LLM and multitask predictions.
+    parts.append(f'<path d="M790 215 C825 215, 835 215, 870 215" fill="none" stroke="{COLORS["gray"]}" stroke-width="2.4" marker-end="url(#arrow)"/>')
+    parts.append(text(832, 195, "fine-tune", "tiny", "middle"))
+    parts.append(text(880, 58, "c", "panel"))
+    parts.append(text(914, 58, "Multitask ICU LLM", "panel"))
+    parts.append(rect(875, 88, 270, 255, "#F4F1FA", COLORS["purple"], 8))
+    parts.append(rect(922, 116, 176, 68, "white", COLORS["purple"], 8))
+    parts.append(text(1010, 143, "Llama-3-8B", "small", "middle"))
+    parts.append(text(1010, 166, "QLoRA risk head", "tiny", "middle"))
+    tasks = [
+        ("mortality", ".761-.787 AUROC", COLORS["blue"]),
+        ("LOS >48h", ".619 AUROC", COLORS["orange"]),
+        ("future intervention", ".800-.815 AUROC", COLORS["green"]),
+    ]
+    for i, (lab, val, col) in enumerate(tasks):
+        y = 214 + i * 36
+        parts.append(rect(910, y, 88, 25, col, "none", 13))
+        parts.append(text(954, y + 18, lab, "tiny", "middle"))
+        parts.append(text(1015, y + 18, val, "tiny"))
+
+    # Bottom: evidence strip and boundary.
+    parts.append(rect(58, 430, 1087, 78, "#FFFFFF", COLORS["line"], 8))
+    badges = [
+        ("compact", "681 mean tokens", "0.0% truncation", COLORS["green"]),
+        ("effective", "20k mortality", ".761-.787 AUROC", COLORS["blue"]),
+        ("reusable", "3 ICU endpoints", "same CASS format", COLORS["purple"]),
+        ("bounded", "external transfer", "mixed across centers", COLORS["orange"]),
+    ]
+    for i, (head, mid, tail, col) in enumerate(badges):
+        x = 90 + i * 260
+        parts.append(rect(x, 452, 96, 28, col, "none", 14))
+        parts.append(text(x + 48, 471, head, "tiny", "middle"))
+        parts.append(text(x + 115, 462, mid, "tiny"))
+        parts.append(text(x + 115, 487, tail, "tiny"))
     save("fig1_main_evidence.svg", parts)
 
 

@@ -1,60 +1,85 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
 <defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#6B7280"/></marker>
 <style><![CDATA[text{font-family:Arial,Helvetica,sans-serif;fill:#1F2937}.small{font-size:18px}.tiny{font-size:15px;fill:#4B5563}.panel{font-size:20px;font-weight:700}.value{font-size:17px;font-weight:700}.axis{stroke:#D1D5DB;stroke-width:1}.bartext{font-size:15px;fill:#1F2937}]]></style>
 </defs>
-<rect x="0" y="0" width="1200" height="520" fill="white"/>
-<text x="35" y="45" class="panel" text-anchor="start">a</text>
-<text x="75" y="45" class="panel" text-anchor="start">Event stream to CASS</text>
-<rect x="55" y="90" width="165" height="30" rx="5" fill="#F7F8FA" stroke="#D1D5DB"/>
-<text x="137" y="110" class="tiny" text-anchor="middle">labs</text>
-<rect x="55" y="138" width="165" height="30" rx="5" fill="#F7F8FA" stroke="#D1D5DB"/>
-<text x="137" y="131" class="tiny" text-anchor="middle">vitals</text>
-<rect x="55" y="186" width="165" height="30" rx="5" fill="#F7F8FA" stroke="#D1D5DB"/>
-<text x="137" y="152" class="tiny" text-anchor="middle">infusions</text>
-<rect x="55" y="234" width="165" height="30" rx="5" fill="#F7F8FA" stroke="#D1D5DB"/>
-<text x="137" y="173" class="tiny" text-anchor="middle">procedures</text>
-<line x1="245" y1="160" x2="330" y2="160" stroke="#6B7280" stroke-width="2"/>
-<text x="285" y="142" class="tiny" text-anchor="middle">aggregate</text>
-<rect x="350" y="93" width="270" height="160" rx="8" fill="#EEF6FB" stroke="#2C7FB8"/>
-<text x="385" y="125" class="tiny" text-anchor="start">count/range</text>
-<text x="385" y="150" class="tiny" text-anchor="start">first/last</text>
-<text x="385" y="175" class="tiny" text-anchor="start">trend</text>
-<text x="385" y="200" class="tiny" text-anchor="start">abnormality</text>
-<text x="385" y="225" class="tiny" text-anchor="start">source</text>
-<line x1="640" y1="160" x2="720" y2="160" stroke="#6B7280" stroke-width="2"/>
-<text x="680" y="142" class="tiny" text-anchor="middle">serialize</text>
-<rect x="740" y="93" width="380" height="160" rx="8" fill="#F4F1FA" stroke="#7B61A8"/>
-<text x="765" y="128" class="tiny" text-anchor="start">MAP: 12 obs, nadir 54, falling, hypotensive</text>
-<text x="765" y="158" class="tiny" text-anchor="start">HR: 18 obs, 82-124, rising, last 121</text>
-<text x="765" y="188" class="tiny" text-anchor="start">Ventilation: invasive support from hour 2</text>
-<text x="765" y="218" class="tiny" text-anchor="start">Vasopressor: norepinephrine started hour 4</text>
-<text x="35" y="325" class="panel" text-anchor="start">b</text>
-<text x="75" y="325" class="panel" text-anchor="start">Source-center AUROC</text>
-<line x1="80" y1="470" x2="505" y2="470" stroke="#D1D5DB" stroke-width="1"/>
-<line x1="80" y1="270" x2="80" y2="470" stroke="#D1D5DB" stroke-width="1"/>
-<rect x="135" y="276.0" width="60" height="194.0" rx="4" fill="#2C7FB8" stroke="none"/>
-<text x="165.0" y="268.0" class="bartext" text-anchor="middle">.776</text>
-<text x="165.0" y="494" class="tiny" text-anchor="middle">Mortality</text>
-<rect x="260" y="315.25" width="60" height="154.75" rx="4" fill="#F28E2B" stroke="none"/>
-<text x="290.0" y="307.25" class="bartext" text-anchor="middle">.619</text>
-<text x="290.0" y="494" class="tiny" text-anchor="middle">LOS</text>
-<rect x="385" y="268.5" width="60" height="201.5" rx="4" fill="#59A14F" stroke="none"/>
-<text x="415.0" y="260.5" class="bartext" text-anchor="middle">.806</text>
-<text x="415.0" y="494" class="tiny" text-anchor="middle">Future</text>
-<text x="83" y="265" class="tiny" text-anchor="start">1.0</text>
-<text x="83" y="365" class="tiny" text-anchor="start">0.5</text>
-<text x="615" y="325" class="panel" text-anchor="start">c</text>
-<text x="655" y="325" class="panel" text-anchor="start">Claim boundary</text>
-<rect x="655" y="355" width="110" height="25" rx="12" fill="#59A14F" stroke="none"/>
-<text x="710" y="373" class="tiny" text-anchor="middle">compact</text>
-<text x="790" y="373" class="tiny" text-anchor="start">681 mean tokens, 0.0% truncation</text>
-<rect x="655" y="393" width="110" height="25" rx="12" fill="#2C7FB8" stroke="none"/>
-<text x="710" y="411" class="tiny" text-anchor="middle">effective</text>
-<text x="790" y="411" class="tiny" text-anchor="start">20k mortality AUROC .761-.787</text>
-<rect x="655" y="431" width="110" height="25" rx="12" fill="#7B61A8" stroke="none"/>
-<text x="710" y="449" class="tiny" text-anchor="middle">reusable</text>
-<text x="790" y="449" class="tiny" text-anchor="start">mortality, LOS, future intervention</text>
-<rect x="655" y="469" width="110" height="25" rx="12" fill="#F28E2B" stroke="none"/>
-<text x="710" y="487" class="tiny" text-anchor="middle">bounded</text>
-<text x="790" y="487" class="tiny" text-anchor="start">external transfer remains mixed</text>
+<rect x="0" y="0" width="1200" height="560" fill="white"/>
+<text x="58" y="58" class="panel" text-anchor="start">a</text>
+<text x="92" y="58" class="panel" text-anchor="start">Partially ordered ICU event stream</text>
+<rect x="58" y="88" width="285" height="255" rx="8" fill="#F7F8FA" stroke="#D1D5DB"/>
+<line x1="95" y1="132" x2="95" y2="306" stroke="#6B7280" stroke-width="2"/>
+<circle cx="95" cy="132" r="5" fill="#6B7280"/>
+<text x="70" y="137" class="tiny" text-anchor="end">0h</text>
+<circle cx="95" cy="190" r="5" fill="#6B7280"/>
+<text x="70" y="195" class="tiny" text-anchor="end">2h</text>
+<circle cx="95" cy="248" r="5" fill="#6B7280"/>
+<text x="70" y="253" class="tiny" text-anchor="end">4h</text>
+<circle cx="95" cy="306" r="5" fill="#6B7280"/>
+<text x="70" y="311" class="tiny" text-anchor="end">6h</text>
+<rect x="124" y="112" width="130" height="28" rx="5" fill="white" stroke="#F28E2B"/>
+<text x="134" y="131" class="tiny" text-anchor="start">lab: lactate 4.0</text>
+<rect x="174" y="147" width="130" height="28" rx="5" fill="white" stroke="#2C7FB8"/>
+<text x="184" y="166" class="tiny" text-anchor="start">vital: MAP 58</text>
+<rect x="126" y="183" width="130" height="28" rx="5" fill="white" stroke="#2C7FB8"/>
+<text x="136" y="202" class="tiny" text-anchor="start">vital: HR 121</text>
+<rect x="188" y="219" width="130" height="28" rx="5" fill="white" stroke="#7B61A8"/>
+<text x="198" y="238" class="tiny" text-anchor="start">device: ventilation</text>
+<rect x="130" y="255" width="130" height="28" rx="5" fill="white" stroke="#59A14F"/>
+<text x="140" y="274" class="tiny" text-anchor="start">drug: norepinephrine</text>
+<rect x="196" y="291" width="130" height="28" rx="5" fill="white" stroke="#6B7280"/>
+<text x="206" y="310" class="tiny" text-anchor="start">procedure: arterial line</text>
+<text x="72" y="372" class="tiny" text-anchor="start">Same-time rows may have no clinical internal order.</text>
+<text x="72" y="396" class="tiny" text-anchor="start">Fixed bins blur timing; imputation can add artificial values.</text>
+<path d="M365 215 C405 215, 410 215, 450 215" fill="none" stroke="#6B7280" stroke-width="2.4" marker-end="url(#arrow)"/>
+<text x="400" y="195" class="tiny" text-anchor="middle">aggregate</text>
+<text x="465" y="58" class="panel" text-anchor="start">b</text>
+<text x="498" y="58" class="panel" text-anchor="start">CASS serialization</text>
+<rect x="455" y="88" width="315" height="255" rx="8" fill="#EEF6FB" stroke="#2C7FB8"/>
+<rect x="485" y="112" width="86" height="25" rx="13" fill="#D7ECF8" stroke="none"/>
+<text x="528" y="130" class="tiny" text-anchor="middle">bind</text>
+<text x="585" y="130" class="tiny" text-anchor="start">concept + value + unit + source</text>
+<rect x="485" y="155" width="86" height="25" rx="13" fill="#D7ECF8" stroke="none"/>
+<text x="528" y="173" class="tiny" text-anchor="middle">compress</text>
+<text x="585" y="173" class="tiny" text-anchor="start">count, range, first/last, trend</text>
+<rect x="485" y="198" width="86" height="25" rx="13" fill="#D7ECF8" stroke="none"/>
+<text x="528" y="216" class="tiny" text-anchor="middle">prioritize</text>
+<text x="585" y="216" class="tiny" text-anchor="start">intervention, abnormality, recent change</text>
+<rect x="485" y="245" width="250" height="68" rx="6" fill="white" stroke="#D1D5DB"/>
+<text x="503" y="267" class="tiny" text-anchor="start">MAP: 12 obs, 54-86 mmHg, falling</text>
+<text x="503" y="289" class="tiny" text-anchor="start">lactate: 2 obs, rising, abnormal high</text>
+<text x="503" y="311" class="tiny" text-anchor="start">ventilation + vasopressor started</text>
+<path d="M790 215 C825 215, 835 215, 870 215" fill="none" stroke="#6B7280" stroke-width="2.4" marker-end="url(#arrow)"/>
+<text x="832" y="195" class="tiny" text-anchor="middle">fine-tune</text>
+<text x="880" y="58" class="panel" text-anchor="start">c</text>
+<text x="914" y="58" class="panel" text-anchor="start">Multitask ICU LLM</text>
+<rect x="875" y="88" width="270" height="255" rx="8" fill="#F4F1FA" stroke="#7B61A8"/>
+<rect x="922" y="116" width="176" height="68" rx="8" fill="white" stroke="#7B61A8"/>
+<text x="1010" y="143" class="small" text-anchor="middle">Llama-3-8B</text>
+<text x="1010" y="166" class="tiny" text-anchor="middle">QLoRA risk head</text>
+<rect x="910" y="214" width="88" height="25" rx="13" fill="#2C7FB8" stroke="none"/>
+<text x="954" y="232" class="tiny" text-anchor="middle">mortality</text>
+<text x="1015" y="232" class="tiny" text-anchor="start">.761-.787 AUROC</text>
+<rect x="910" y="250" width="88" height="25" rx="13" fill="#F28E2B" stroke="none"/>
+<text x="954" y="268" class="tiny" text-anchor="middle">LOS >48h</text>
+<text x="1015" y="268" class="tiny" text-anchor="start">.619 AUROC</text>
+<rect x="910" y="286" width="88" height="25" rx="13" fill="#59A14F" stroke="none"/>
+<text x="954" y="304" class="tiny" text-anchor="middle">future intervention</text>
+<text x="1015" y="304" class="tiny" text-anchor="start">.800-.815 AUROC</text>
+<rect x="58" y="430" width="1087" height="78" rx="8" fill="#FFFFFF" stroke="#D1D5DB"/>
+<rect x="90" y="452" width="96" height="28" rx="14" fill="#59A14F" stroke="none"/>
+<text x="138" y="471" class="tiny" text-anchor="middle">compact</text>
+<text x="205" y="462" class="tiny" text-anchor="start">681 mean tokens</text>
+<text x="205" y="487" class="tiny" text-anchor="start">0.0% truncation</text>
+<rect x="350" y="452" width="96" height="28" rx="14" fill="#2C7FB8" stroke="none"/>
+<text x="398" y="471" class="tiny" text-anchor="middle">effective</text>
+<text x="465" y="462" class="tiny" text-anchor="start">20k mortality</text>
+<text x="465" y="487" class="tiny" text-anchor="start">.761-.787 AUROC</text>
+<rect x="610" y="452" width="96" height="28" rx="14" fill="#7B61A8" stroke="none"/>
+<text x="658" y="471" class="tiny" text-anchor="middle">reusable</text>
+<text x="725" y="462" class="tiny" text-anchor="start">3 ICU endpoints</text>
+<text x="725" y="487" class="tiny" text-anchor="start">same CASS format</text>
+<rect x="870" y="452" width="96" height="28" rx="14" fill="#F28E2B" stroke="none"/>
+<text x="918" y="471" class="tiny" text-anchor="middle">bounded</text>
+<text x="985" y="462" class="tiny" text-anchor="start">external transfer</text>
+<text x="985" y="487" class="tiny" text-anchor="start">mixed across centers</text>
 </svg>
