@@ -1,0 +1,17 @@
+\begin{table}[t]
+\caption{Permutation-sensitivity diagnostics for short-context diagnostic serializers. Values are mean$\pm$standard deviation across three seeds and 500 MIMIC-IV audit records using Llama-3-8B. Lower values indicate less sensitivity to legal within-time reorderings. CASS is deterministic after concept aggregation and is therefore evaluated separately through string-level reproducibility rather than this row-order audit.}
+\label{tab:permutation_diagnostics}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4.0pt}
+\begin{tabular}{lccc}
+\toprule
+Representation & Prob. std. & Risk span & Flip rate \\
+\midrule
+Flat & .037$\pm$.028 & .096$\pm$.072 & .043$\pm$.045 \\
+XML & .053$\pm$.042 & .137$\pm$.109 & .083$\pm$.114 \\
+XML-Aug & .054$\pm$.024 & .141$\pm$.063 & .061$\pm$.045 \\
+XML+KL & .039$\pm$.018 & .101$\pm$.047 & .025$\pm$.009 \\
+\bottomrule
+\end{tabular}
+\end{table}

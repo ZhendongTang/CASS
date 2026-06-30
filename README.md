@@ -1,6 +1,6 @@
 # CASS ICU
 
-This repository contains the public code and aggregate experiment records for the CASS ICU experiments. CASS denotes Compact Attribute-aware Event-Stream Serialization: a compact clinical-event narrative for ICU event streams. The central claim is that CASS is much smaller than XML-like representations, performs well on source-center ICU prediction, and can be reused across mortality, length-of-stay, and future-intervention tasks.
+This repository contains the public code and aggregate experiment records for the CASS ICU experiments. CASS denotes Compact Attribute-aware Event-Stream Serialization: a compact concept-summary serialization for ICU event streams. The central claim is that CASS is much smaller than XML-like representations, performs well on source-center ICU prediction, and can be reused across mortality, length-of-stay, and future-intervention tasks.
 
 ## What Is Included
 
@@ -102,7 +102,7 @@ As of the included results, the strongest completed evidence is:
 
 - CASS 20k mortality seed43/44: MIMIC AUROC 0.7875/0.7614, eICU 0.5897/0.5832, NWICU 0.6585/0.6085.
 - CASS future-intervention 10k seed42/43/44: MIMIC AUROC 0.8000/0.8030/0.8150.
-- Additional future-intervention seed43/44 runs were queued after the current main experiment queue.
+- Future-intervention seed43/44 runs are included in the current aggregate summaries.
 
 ## API Key Policy
 
