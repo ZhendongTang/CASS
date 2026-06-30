@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\caption{Serialization ablation for mortality prediction and context efficiency. All rows use Llama-3-8B QLoRA, MIMIC-IV training, 2048-token inputs, seed42, and 500 evaluation records per center unless noted. Cells report AUROC/AUPRC when available. Token statistics are averaged over MIMIC-IV, eICU, and NWICU audits.}
+\label{tab:serialization_ablation}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.0pt}
+\begin{tabular}{llccccc}
+\toprule
+Format & Attribute handling & MIMIC-IV & eICU & NWICU & Mean tokens & Trunc. \\
+\midrule
+Flat & chronological row list; weak binding & .538/.121 & .509/.084 & .506/.108 & 2107 & 51.5\% \\
+XML & explicit concept/value/unit/source tags & .483/.110 & .421/.086 & .583/.179 & 2324 & 65.4\% \\
+Compact & compressed concept lines; fewer tags & .533/.137 & .572/.120 & .533/.115 & 1394 & 13.7\% \\
+\textbf{CASS} & attributed concept summaries & \textbf{.695}/-- & .475/-- & \textbf{.609}/-- & \textbf{681} & \textbf{0.0\%} \\
+\bottomrule
+\end{tabular}
+\end{table*}

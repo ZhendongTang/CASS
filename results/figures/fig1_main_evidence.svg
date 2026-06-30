@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+<defs>
+<style><![CDATA[text{font-family:Arial,Helvetica,sans-serif;fill:#1F2937}.small{font-size:18px}.tiny{font-size:15px;fill:#4B5563}.panel{font-size:20px;font-weight:700}.value{font-size:17px;font-weight:700}.axis{stroke:#D1D5DB;stroke-width:1}.bartext{font-size:15px;fill:#1F2937}]]></style>
+</defs>
+<rect x="0" y="0" width="1200" height="520" fill="white"/>
+<text x="35" y="45" class="panel" text-anchor="start">a</text>
+<text x="75" y="45" class="panel" text-anchor="start">Event stream to CASS</text>
+<rect x="55" y="90" width="165" height="30" rx="5" fill="#F7F8FA" stroke="#D1D5DB"/>
+<text x="137" y="110" class="tiny" text-anchor="middle">labs</text>
+<rect x="55" y="138" width="165" height="30" rx="5" fill="#F7F8FA" stroke="#D1D5DB"/>
+<text x="137" y="131" class="tiny" text-anchor="middle">vitals</text>
+<rect x="55" y="186" width="165" height="30" rx="5" fill="#F7F8FA" stroke="#D1D5DB"/>
+<text x="137" y="152" class="tiny" text-anchor="middle">infusions</text>
+<rect x="55" y="234" width="165" height="30" rx="5" fill="#F7F8FA" stroke="#D1D5DB"/>
+<text x="137" y="173" class="tiny" text-anchor="middle">procedures</text>
+<line x1="245" y1="160" x2="330" y2="160" stroke="#6B7280" stroke-width="2"/>
+<text x="285" y="142" class="tiny" text-anchor="middle">aggregate</text>
+<rect x="350" y="93" width="270" height="160" rx="8" fill="#EEF6FB" stroke="#2C7FB8"/>
+<text x="385" y="125" class="tiny" text-anchor="start">count/range</text>
+<text x="385" y="150" class="tiny" text-anchor="start">first/last</text>
+<text x="385" y="175" class="tiny" text-anchor="start">trend</text>
+<text x="385" y="200" class="tiny" text-anchor="start">abnormality</text>
+<text x="385" y="225" class="tiny" text-anchor="start">source</text>
+<line x1="640" y1="160" x2="720" y2="160" stroke="#6B7280" stroke-width="2"/>
+<text x="680" y="142" class="tiny" text-anchor="middle">serialize</text>
+<rect x="740" y="93" width="380" height="160" rx="8" fill="#F4F1FA" stroke="#7B61A8"/>
+<text x="765" y="128" class="tiny" text-anchor="start">MAP: 12 obs, nadir 54, falling, hypotensive</text>
+<text x="765" y="158" class="tiny" text-anchor="start">HR: 18 obs, 82-124, rising, last 121</text>
+<text x="765" y="188" class="tiny" text-anchor="start">Ventilation: invasive support from hour 2</text>
+<text x="765" y="218" class="tiny" text-anchor="start">Vasopressor: norepinephrine started hour 4</text>
+<text x="35" y="325" class="panel" text-anchor="start">b</text>
+<text x="75" y="325" class="panel" text-anchor="start">Source-center AUROC</text>
+<line x1="80" y1="470" x2="505" y2="470" stroke="#D1D5DB" stroke-width="1"/>
+<line x1="80" y1="270" x2="80" y2="470" stroke="#D1D5DB" stroke-width="1"/>
+<rect x="135" y="276.0" width="60" height="194.0" rx="4" fill="#2C7FB8" stroke="none"/>
+<text x="165.0" y="268.0" class="bartext" text-anchor="middle">.776</text>
+<text x="165.0" y="494" class="tiny" text-anchor="middle">Mortality</text>
+<rect x="260" y="315.25" width="60" height="154.75" rx="4" fill="#F28E2B" stroke="none"/>
+<text x="290.0" y="307.25" class="bartext" text-anchor="middle">.619</text>
+<text x="290.0" y="494" class="tiny" text-anchor="middle">LOS</text>
+<rect x="385" y="268.5" width="60" height="201.5" rx="4" fill="#59A14F" stroke="none"/>
+<text x="415.0" y="260.5" class="bartext" text-anchor="middle">.806</text>
+<text x="415.0" y="494" class="tiny" text-anchor="middle">Future</text>
+<text x="83" y="265" class="tiny" text-anchor="start">1.0</text>
+<text x="83" y="365" class="tiny" text-anchor="start">0.5</text>
+<text x="615" y="325" class="panel" text-anchor="start">c</text>
+<text x="655" y="325" class="panel" text-anchor="start">Claim boundary</text>
+<rect x="655" y="355" width="110" height="25" rx="12" fill="#59A14F" stroke="none"/>
+<text x="710" y="373" class="tiny" text-anchor="middle">compact</text>
+<text x="790" y="373" class="tiny" text-anchor="start">681 mean tokens, 0.0% truncation</text>
+<rect x="655" y="393" width="110" height="25" rx="12" fill="#2C7FB8" stroke="none"/>
+<text x="710" y="411" class="tiny" text-anchor="middle">effective</text>
+<text x="790" y="411" class="tiny" text-anchor="start">20k mortality AUROC .761-.787</text>
+<rect x="655" y="431" width="110" height="25" rx="12" fill="#7B61A8" stroke="none"/>
+<text x="710" y="449" class="tiny" text-anchor="middle">reusable</text>
+<text x="790" y="449" class="tiny" text-anchor="start">mortality, LOS, future intervention</text>
+<rect x="655" y="469" width="110" height="25" rx="12" fill="#F28E2B" stroke="none"/>
+<text x="710" y="487" class="tiny" text-anchor="middle">bounded</text>
+<text x="790" y="487" class="tiny" text-anchor="start">external transfer remains mixed</text>
+</svg>

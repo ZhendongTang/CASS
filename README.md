@@ -1,6 +1,6 @@
-# ClinTime Summary ICU
+# CASS ICU
 
-This repository contains the public code and aggregate experiment records for the ClinTime Summary ICU experiments. The central claim is that a compact clinical-event narrative (`summary`) is an effective serialization format for ICU event streams: it is much smaller than XML-like representations, performs well on the main mortality task, and shows useful transfer across additional ICU prediction tasks.
+This repository contains the public code and aggregate experiment records for the CASS ICU experiments. CASS denotes Compact Attribute-aware Event-Stream Serialization: a compact clinical-event narrative for ICU event streams. The central claim is that CASS is much smaller than XML-like representations, performs well on source-center ICU prediction, and can be reused across mortality, length-of-stay, and future-intervention tasks.
 
 ## What Is Included
 
@@ -62,13 +62,13 @@ pces-icu audit-events \
 
 Equivalent commands are available for `eicu` and `nwicu`.
 
-## Train And Evaluate Summary LLM
+## Train And Evaluate CASS LLM
 
 ```bash
 python -m pces_icu.multicenter_llm train \
   --data work/events/mimic.jsonl.gz \
   --model /path/to/Meta-Llama-3-8B \
-  --output work/runs/summary_20k_seed42 \
+  --output work/runs/cass_20k_seed42 \
   --variant summary \
   --seed 42 \
   --sample-seed 2026 \
@@ -93,15 +93,15 @@ Auxiliary tasks such as length-of-stay and future-intervention prediction use th
 
 The aggregate experiment summaries live in `results/`. Key files:
 
-- `SUMMARY_MULTITASK_RESULTS_20260629.md`: current multitask evidence for summary serialization.
+- `SUMMARY_MULTITASK_RESULTS_20260629.md`: current multitask evidence for CASS serialization.
 - `EXPERIMENT_TRACKER_SUMMARY_NEXT_20260629.md`: planned and queued robustness runs.
 - `RESULTS.md`: earlier complete endpoint analysis.
 - `paper_tables/*.tex`: LaTeX tables used in the draft paper.
 
 As of the included results, the strongest completed evidence is:
 
-- Summary 20k mortality seed43/44: MIMIC AUROC 0.7875/0.7614, eICU 0.5897/0.5832, NWICU 0.6585/0.6085.
-- Future-intervention summary 10k seed42: MIMIC AUROC 0.8000, eICU 0.5221, NWICU 0.5173.
+- CASS 20k mortality seed43/44: MIMIC AUROC 0.7875/0.7614, eICU 0.5897/0.5832, NWICU 0.6585/0.6085.
+- CASS future-intervention 10k seed42/43/44: MIMIC AUROC 0.8000/0.8030/0.8150.
 - Additional future-intervention seed43/44 runs were queued after the current main experiment queue.
 
 ## API Key Policy
