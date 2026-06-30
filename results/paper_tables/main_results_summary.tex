@@ -1,0 +1,16 @@
+\begin{table*}[t]
+\caption{Main ClinTime-Summary results with Llama-3-8B QLoRA at 2048 tokens. Models are trained on MIMIC-IV and evaluated on 500 records per center. Cells report AUROC / AUPRC; ranges indicate completed seeds. Mortality AUPRC ranges use seeds 43--44 where full metrics are available.}
+\label{tab:main_results}
+\centering
+\small
+\setlength{\tabcolsep}{4.0pt}
+\begin{tabular}{llccc}
+\toprule
+Task & Setting & MIMIC-IV & eICU & NWICU \\
+\midrule
+Mortality & 20k, seeds 42--44 & .761--.787 / .334--.367 & .467--.590 / .119--.145 & .608--.659 / .201--.212 \\
+LOS $>48$h & 10k, seed42 & .619 / .586 & .576 / .466 & .511 / .512 \\
+Future intervention & 10k, seeds 42--44 & .800--.815 / .493--.510 & .357--.524 / .045--.064 & .500--.540 / .145--.154 \\
+\bottomrule
+\end{tabular}
+\end{table*}

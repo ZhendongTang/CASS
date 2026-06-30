@@ -1,0 +1,576 @@
+{
+  "datasets": [
+    {
+      "center": "MIMIC-IV",
+      "stays": 64767,
+      "events_m": 5.73,
+      "mortality": 10.67,
+      "role": "MIMIC train/val/test"
+    },
+    {
+      "center": "eICU",
+      "stays": 132546,
+      "events_m": 37.09,
+      "mortality": 8.7,
+      "role": "external hospital split"
+    },
+    {
+      "center": "NWICU",
+      "stays": 22728,
+      "events_m": 0.75,
+      "mortality": 9.93,
+      "role": "external patient split"
+    }
+  ],
+  "mortality": [
+    {
+      "train": "5k",
+      "seed": 42,
+      "center": "MIMIC-IV",
+      "auroc": 0.695
+    },
+    {
+      "train": "5k",
+      "seed": 43,
+      "center": "MIMIC-IV",
+      "auroc": 0.7188
+    },
+    {
+      "train": "5k",
+      "seed": 44,
+      "center": "MIMIC-IV",
+      "auroc": 0.7089
+    },
+    {
+      "train": "10k",
+      "seed": 42,
+      "center": "MIMIC-IV",
+      "auroc": 0.7034
+    },
+    {
+      "train": "20k",
+      "seed": 42,
+      "center": "MIMIC-IV",
+      "auroc": 0.778
+    },
+    {
+      "train": "5k",
+      "seed": 42,
+      "center": "eICU",
+      "auroc": 0.4753
+    },
+    {
+      "train": "5k",
+      "seed": 43,
+      "center": "eICU",
+      "auroc": 0.5453
+    },
+    {
+      "train": "5k",
+      "seed": 44,
+      "center": "eICU",
+      "auroc": 0.4959
+    },
+    {
+      "train": "10k",
+      "seed": 42,
+      "center": "eICU",
+      "auroc": 0.5174
+    },
+    {
+      "train": "20k",
+      "seed": 42,
+      "center": "eICU",
+      "auroc": 0.4673
+    },
+    {
+      "train": "5k",
+      "seed": 42,
+      "center": "NWICU",
+      "auroc": 0.6091
+    },
+    {
+      "train": "5k",
+      "seed": 43,
+      "center": "NWICU",
+      "auroc": 0.5712
+    },
+    {
+      "train": "5k",
+      "seed": 44,
+      "center": "NWICU",
+      "auroc": 0.5857
+    },
+    {
+      "train": "10k",
+      "seed": 42,
+      "center": "NWICU",
+      "auroc": 0.6377
+    },
+    {
+      "train": "20k",
+      "seed": 42,
+      "center": "NWICU",
+      "auroc": 0.6086
+    },
+    {
+      "train": "20k",
+      "seed": 43,
+      "center": "MIMIC-IV",
+      "auroc": 0.7874522504567347,
+      "auprc": 0.36661917288290846,
+      "brier": 0.12290783209135847,
+      "ece": 0.1417883036537096
+    },
+    {
+      "train": "20k",
+      "seed": 43,
+      "center": "eICU",
+      "auroc": 0.5897275940944063,
+      "auprc": 0.14504435921879547,
+      "brier": 0.08478547533363985,
+      "ece": 0.05638902509398758
+    },
+    {
+      "train": "20k",
+      "seed": 43,
+      "center": "NWICU",
+      "auroc": 0.6585111111111112,
+      "auprc": 0.21158690565144053,
+      "brier": 0.134247656044025,
+      "ece": 0.1545182052757591
+    },
+    {
+      "train": "20k",
+      "seed": 44,
+      "center": "MIMIC-IV",
+      "auroc": 0.7613560870287328,
+      "auprc": 0.33363974200638474,
+      "brier": 0.10348719826715157,
+      "ece": 0.08706220010714608
+    },
+    {
+      "train": "20k",
+      "seed": 44,
+      "center": "eICU",
+      "auroc": 0.583203368683718,
+      "auprc": 0.11927852535823955,
+      "brier": 0.08516550323001798,
+      "ece": 0.060467852522619076
+    },
+    {
+      "train": "20k",
+      "seed": 44,
+      "center": "NWICU",
+      "auroc": 0.6084888888888889,
+      "auprc": 0.20068321004378928,
+      "brier": 0.15041932977593345,
+      "ece": 0.15565555018745364
+    }
+  ],
+  "formats": [
+    {
+      "format": "Compact",
+      "center": "MIMIC-IV",
+      "auroc": 0.53284338149809,
+      "auprc": 0.13720159080215824,
+      "brier": 0.10151107463665382,
+      "ece": 0.07220623862603678
+    },
+    {
+      "format": "Compact",
+      "center": "eICU",
+      "auroc": 0.5719744229569557,
+      "auprc": 0.11953053126722901,
+      "brier": 0.07834694395411615,
+      "ece": 0.036729035412310616
+    },
+    {
+      "format": "Compact",
+      "center": "NWICU",
+      "auroc": 0.5326888888888889,
+      "auprc": 0.11481622119997884,
+      "brier": 0.09321360594851884,
+      "ece": 0.05299682748492341
+    },
+    {
+      "format": "XML",
+      "center": "MIMIC-IV",
+      "auroc": 0.4831008138183026,
+      "auprc": 0.11009843837527782,
+      "brier": 0.10414619712617453,
+      "ece": 0.08454102341778344
+    },
+    {
+      "format": "XML",
+      "center": "eICU",
+      "auroc": 0.42139737991266374,
+      "auprc": 0.08559459481764764,
+      "brier": 0.0823478248803531,
+      "ece": 0.06935620998934611
+    },
+    {
+      "format": "XML",
+      "center": "NWICU",
+      "auroc": 0.5832,
+      "auprc": 0.1791304512108403,
+      "brier": 0.09455610978073635,
+      "ece": 0.07924919897416838
+    },
+    {
+      "format": "Flat",
+      "center": "MIMIC-IV",
+      "auroc": 0.5383657199800698,
+      "auprc": 0.12066801957767642,
+      "brier": 0.10391284251231954,
+      "ece": 0.08686969636275897
+    },
+    {
+      "format": "Flat",
+      "center": "eICU",
+      "auroc": 0.5092794759825328,
+      "auprc": 0.08400632759576439,
+      "brier": 0.09105825325137985,
+      "ece": 0.06930656858877046
+    },
+    {
+      "format": "Flat",
+      "center": "NWICU",
+      "auroc": 0.5061111111111111,
+      "auprc": 0.10802425758761366,
+      "brier": 0.0964728914490616,
+      "ece": 0.08248497255938128
+    },
+    {
+      "format": "Summary",
+      "center": "MIMIC-IV",
+      "auroc": 0.695
+    },
+    {
+      "format": "Summary",
+      "center": "eICU",
+      "auroc": 0.4753
+    },
+    {
+      "format": "Summary",
+      "center": "NWICU",
+      "auroc": 0.6091
+    }
+  ],
+  "multitask": [
+    {
+      "task": "LOS >48h",
+      "train": "5k",
+      "seed": 42,
+      "center": "MIMIC-IV",
+      "auroc": 0.5571,
+      "auprc": 0.5408
+    },
+    {
+      "task": "LOS >48h",
+      "train": "5k",
+      "seed": 42,
+      "center": "eICU",
+      "auroc": 0.5579,
+      "auprc": 0.4376
+    },
+    {
+      "task": "LOS >48h",
+      "train": "5k",
+      "seed": 42,
+      "center": "NWICU",
+      "auroc": 0.5029,
+      "auprc": 0.4796
+    },
+    {
+      "task": "LOS >48h",
+      "train": "10k",
+      "seed": 42,
+      "center": "MIMIC-IV",
+      "auroc": 0.6193,
+      "auprc": 0.5862
+    },
+    {
+      "task": "LOS >48h",
+      "train": "10k",
+      "seed": 42,
+      "center": "eICU",
+      "auroc": 0.5756,
+      "auprc": 0.4661
+    },
+    {
+      "task": "LOS >48h",
+      "train": "10k",
+      "seed": 42,
+      "center": "NWICU",
+      "auroc": 0.5114,
+      "auprc": 0.5123
+    },
+    {
+      "task": "Future intervention",
+      "train": "5k",
+      "seed": 42,
+      "center": "MIMIC-IV",
+      "auroc": 0.7742,
+      "auprc": 0.4209
+    },
+    {
+      "task": "Future intervention",
+      "train": "5k",
+      "seed": 42,
+      "center": "eICU",
+      "auroc": 0.5793,
+      "auprc": 0.0688
+    },
+    {
+      "task": "Future intervention",
+      "train": "5k",
+      "seed": 42,
+      "center": "NWICU",
+      "auroc": 0.4925,
+      "auprc": 0.1224
+    },
+    {
+      "task": "Future intervention",
+      "train": "10k",
+      "seed": 42,
+      "center": "MIMIC-IV",
+      "auroc": 0.8,
+      "auprc": 0.5013
+    },
+    {
+      "task": "Future intervention",
+      "train": "10k",
+      "seed": 42,
+      "center": "eICU",
+      "auroc": 0.5221,
+      "auprc": 0.0636
+    },
+    {
+      "task": "Future intervention",
+      "train": "10k",
+      "seed": 42,
+      "center": "NWICU",
+      "auroc": 0.5173,
+      "auprc": 0.1482
+    },
+    {
+      "task": "Future intervention",
+      "train": "10k",
+      "seed": 43,
+      "center": "MIMIC-IV",
+      "auroc": 0.8029923799988876,
+      "auprc": 0.4933767565814088,
+      "brier": 0.057594120280890594,
+      "ece": 0.054622489547939045
+    },
+    {
+      "task": "Future intervention",
+      "train": "10k",
+      "seed": 43,
+      "center": "eICU",
+      "auroc": 0.5242331063767479,
+      "auprc": 0.05927871439813224,
+      "brier": 0.05760260705926166,
+      "ece": 0.052073981058550996
+    },
+    {
+      "task": "Future intervention",
+      "train": "10k",
+      "seed": 43,
+      "center": "NWICU",
+      "auroc": 0.5403746386281731,
+      "auprc": 0.1454081684987223,
+      "brier": 0.12333946473751081,
+      "ece": 0.09738930532615633
+    },
+    {
+      "task": "Future intervention",
+      "train": "10k",
+      "seed": 44,
+      "center": "MIMIC-IV",
+      "auroc": 0.8149785861282608,
+      "auprc": 0.5100206764884058,
+      "brier": 0.05540904372894472,
+      "ece": 0.05263715874485206
+    },
+    {
+      "task": "Future intervention",
+      "train": "10k",
+      "seed": 44,
+      "center": "eICU",
+      "auroc": 0.3573101984039827,
+      "auprc": 0.04482350841899736,
+      "brier": 0.0600229231904912,
+      "ece": 0.05633403329778229
+    },
+    {
+      "task": "Future intervention",
+      "train": "10k",
+      "seed": 44,
+      "center": "NWICU",
+      "auroc": 0.5003168191358758,
+      "auprc": 0.1544522421333525,
+      "brier": 0.15165425311724726,
+      "ece": 0.15696325050946322
+    }
+  ],
+  "token_audit": {
+    "mimic": {
+      "summary": {
+        "n": 500,
+        "mean_tokens": 944.618,
+        "median_tokens": 1062.0,
+        "p90_tokens": 1242,
+        "p95_tokens": 1353,
+        "max_tokens": 1702,
+        "truncated_at_2048": 0,
+        "truncation_rate_at_2048": 0.0
+      },
+      "compact": {
+        "n": 500,
+        "mean_tokens": 1873.35,
+        "median_tokens": 1909.5,
+        "p90_tokens": 2527,
+        "p95_tokens": 2701,
+        "max_tokens": 3700,
+        "truncated_at_2048": 161,
+        "truncation_rate_at_2048": 0.322
+      },
+      "xml": {
+        "n": 500,
+        "mean_tokens": 2900.848,
+        "median_tokens": 2955.5,
+        "p90_tokens": 3860,
+        "p95_tokens": 3909,
+        "max_tokens": 3974,
+        "truncated_at_2048": 445,
+        "truncation_rate_at_2048": 0.89
+      },
+      "flat": {
+        "n": 500,
+        "mean_tokens": 2193.646,
+        "median_tokens": 2041.0,
+        "p90_tokens": 3287,
+        "p95_tokens": 3387,
+        "max_tokens": 3859,
+        "truncated_at_2048": 247,
+        "truncation_rate_at_2048": 0.494
+      },
+      "json": {
+        "n": 500,
+        "mean_tokens": 1857.716,
+        "median_tokens": 1915.0,
+        "p90_tokens": 2519,
+        "p95_tokens": 2596,
+        "max_tokens": 2650,
+        "truncated_at_2048": 159,
+        "truncation_rate_at_2048": 0.318
+      }
+    },
+    "eicu": {
+      "summary": {
+        "n": 500,
+        "mean_tokens": 588.62,
+        "median_tokens": 469.0,
+        "p90_tokens": 927,
+        "p95_tokens": 998,
+        "max_tokens": 1132,
+        "truncated_at_2048": 0,
+        "truncation_rate_at_2048": 0.0
+      },
+      "compact": {
+        "n": 500,
+        "mean_tokens": 1536.458,
+        "median_tokens": 1505.5,
+        "p90_tokens": 1986,
+        "p95_tokens": 2110,
+        "max_tokens": 2603,
+        "truncated_at_2048": 40,
+        "truncation_rate_at_2048": 0.08
+      },
+      "xml": {
+        "n": 500,
+        "mean_tokens": 2732.974,
+        "median_tokens": 2740.0,
+        "p90_tokens": 3450,
+        "p95_tokens": 3663,
+        "max_tokens": 3981,
+        "truncated_at_2048": 451,
+        "truncation_rate_at_2048": 0.902
+      },
+      "flat": {
+        "n": 500,
+        "mean_tokens": 3210.22,
+        "median_tokens": 3291.0,
+        "p90_tokens": 3442,
+        "p95_tokens": 3531,
+        "max_tokens": 3692,
+        "truncated_at_2048": 488,
+        "truncation_rate_at_2048": 0.976
+      },
+      "json": {
+        "n": 500,
+        "mean_tokens": 1433.736,
+        "median_tokens": 1395.0,
+        "p90_tokens": 1858,
+        "p95_tokens": 1979,
+        "max_tokens": 2427,
+        "truncated_at_2048": 17,
+        "truncation_rate_at_2048": 0.034
+      }
+    },
+    "nwicu": {
+      "summary": {
+        "n": 500,
+        "mean_tokens": 510.278,
+        "median_tokens": 498.0,
+        "p90_tokens": 931,
+        "p95_tokens": 961,
+        "max_tokens": 1115,
+        "truncated_at_2048": 0,
+        "truncation_rate_at_2048": 0.0
+      },
+      "compact": {
+        "n": 500,
+        "mean_tokens": 772.118,
+        "median_tokens": 680.5,
+        "p90_tokens": 1412,
+        "p95_tokens": 1605,
+        "max_tokens": 2361,
+        "truncated_at_2048": 4,
+        "truncation_rate_at_2048": 0.008
+      },
+      "xml": {
+        "n": 500,
+        "mean_tokens": 1338.566,
+        "median_tokens": 1251.5,
+        "p90_tokens": 2326,
+        "p95_tokens": 2591,
+        "max_tokens": 3713,
+        "truncated_at_2048": 85,
+        "truncation_rate_at_2048": 0.17
+      },
+      "flat": {
+        "n": 500,
+        "mean_tokens": 915.748,
+        "median_tokens": 833.0,
+        "p90_tokens": 1848,
+        "p95_tokens": 2219,
+        "max_tokens": 3318,
+        "truncated_at_2048": 38,
+        "truncation_rate_at_2048": 0.076
+      },
+      "json": {
+        "n": 500,
+        "mean_tokens": 820.212,
+        "median_tokens": 729.5,
+        "p90_tokens": 1467,
+        "p95_tokens": 1655,
+        "max_tokens": 2391,
+        "truncated_at_2048": 4,
+        "truncation_rate_at_2048": 0.008
+      }
+    }
+  }
+}
