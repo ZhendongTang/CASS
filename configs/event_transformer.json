@@ -8,7 +8,5 @@
   "batch_size": 32,
   "learning_rate": 0.0003,
   "weight_decay": 0.01,
-  "epochs": 20,
-  "patience": 4
+  "epochs": 20
 }
-

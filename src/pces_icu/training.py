@@ -189,9 +189,7 @@ def train_event_transformer(data: str | Path, output_dir: str | Path, config: di
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=float(config.get("learning_rate", 3e-4)), weight_decay=float(config.get("weight_decay", 0.01)))
     loss_fn = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([(len(train) - sum(r.label for r in train)) / max(1, sum(r.label for r in train))], device=device))
-    best_state, best_auprc = None, -1.0
     epochs = int(config.get("epochs", 20))
-    patience, stale = int(config.get("patience", 4)), 0
 
     def predict(items):
         model.eval(); probs = []
@@ -208,17 +206,6 @@ def train_event_transformer(data: str | Path, output_dir: str | Path, config: di
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             optimizer.step()
-        val_prob = predict(val)
-        score = binary_metrics([record.label for record in val], val_prob)["auprc"] if val else 0.0
-        if score > best_auprc:
-            best_auprc, stale = score, 0
-            best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
-        else:
-            stale += 1
-            if stale >= patience:
-                break
-    if best_state is not None:
-        model.load_state_dict(best_state)
     output_dir = Path(output_dir); output_dir.mkdir(parents=True, exist_ok=True)
     result = {"model": "event_transformer", "seed": seed, "config": asdict(cfg), "splits": {}}
     for split_name, items in (("val", val), ("test", test)):

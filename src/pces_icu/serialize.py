@@ -55,6 +55,12 @@ class ClinTimeFeatureSummaryConfig:
     max_chars: int = 3_000
 
 
+@dataclass(frozen=True)
+class MEDSConfig:
+    max_events: int = 160
+    max_chars: int = 6_000
+
+
 def _event_priority(event: Event) -> tuple[int, int, str]:
     abnormal = 0 if event.abnormal_flag in {"high", "low"} else 1
     return (abnormal, -event.relative_minute, event.event_id)
@@ -109,6 +115,36 @@ def serialize_events(events: Iterable[Event], config: SerializationConfig, seed:
         blocks.append(block)
         previous = minute
     return "\n".join(blocks)
+
+
+def serialize_meds_events(events: Iterable[Event], config: MEDSConfig) -> str:
+    """Serialize events in a MEDS-like long-table schema for LLM baselines.
+
+    MEDS represents clinical data as an event table centered on subject, time,
+    code, and observed values.  This text view keeps the same row-wise spirit:
+    one observation/intervention per line, ordered by event time and code,
+    without CASS-style aggregation or trend features.
+    """
+    selected = select_matched_events(events, config.max_events)
+    lines = [
+        "MEDS-like event table; rows are time-ordered observations.",
+        "time_min|code|numeric_value|text_value|unit|source|flag",
+    ]
+    used = sum(len(line) + 1 for line in lines)
+    for event in selected:
+        value = event.canonical_value if event.canonical_value is not None else event.raw_value
+        numeric = safe_float(value)
+        numeric_value = _compact_number(numeric) if numeric is not None else ""
+        text_value = "" if numeric is not None or value is None else _clean(value)[:32]
+        row = (
+            f"{event.relative_minute}|{_clean(event.concept)}|{numeric_value}|{text_value}|"
+            f"{_clean(event.unit)[:16]}|{_clean(event.source)}|{_clean(event.abnormal_flag)}"
+        )
+        if used + len(row) + 1 > config.max_chars:
+            break
+        lines.append(row)
+        used += len(row) + 1
+    return "\n".join(lines)
 
 
 def paired_views(events: Iterable[Event], config: SerializationConfig, seed: int) -> tuple[str, str]:

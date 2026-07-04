@@ -17,6 +17,10 @@ DATA = {
 }
 VARIANTS = ("flat", "xml", "xml_aug", "xml_kl")
 SEEDS = (42, 43, 44)
+FINAL_TRAIN_RECORDS = 20_000
+FINAL_VAL_RECORDS = 20_000
+FINAL_EVAL_RECORDS_PER_CENTER = 20_000
+FINAL_AUDIT_RECORDS_PER_CENTER = 20_000
 PREFIX = (
     "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 "
     "PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false "
@@ -35,7 +39,7 @@ def token_jobs(root: str) -> list[dict[str, str]]:
             output = f"{root}/token_audit/{backbone}/{dataset}.json"
             command = (
                 f"python scripts/audit_token_lengths.py --data {data} --dataset {dataset} "
-                f"--model {model} --output {output} --max-records 1000 "
+                f"--model {model} --output {output} --max-records {FINAL_EVAL_RECORDS_PER_CENTER} "
                 "--sample-seed 2026 --budgets 256 512 1024"
             )
             jobs.append(job(f"token_{backbone}_{dataset}", command, output))
@@ -53,7 +57,9 @@ def training_jobs(root: str) -> list[dict[str, str]]:
                     f"python -m pces_icu.multicenter_llm train --data {DATA['mimic']} --model {model} "
                     f"--output {output} --variant {variant} --seed {seed} --sample-seed 2026 "
                     "--epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 "
-                    f"--max-train-records 1000 --max-val-records 256 {evaluations} --max-eval-records 500"
+                    f"--max-train-records {FINAL_TRAIN_RECORDS} "
+                    f"--max-val-records {FINAL_VAL_RECORDS} "
+                    f"{evaluations} --max-eval-records {FINAL_EVAL_RECORDS_PER_CENTER}"
                 )
                 jobs.append(job(f"train_{backbone}_{variant}_s{seed}", command, f"{output}/train_metrics.json"))
     return jobs
@@ -70,7 +76,8 @@ def audit_jobs(root: str) -> list[dict[str, str]]:
                     command = (
                         f"python -m pces_icu.multicenter_llm audit-permutation --data {data} "
                         f"--checkpoint {checkpoint} --output {output} --dataset {dataset} "
-                        "--max-records 500 --permutations 5 --audit-seed 2026 --view-batch-size 1"
+                        f"--max-records {FINAL_AUDIT_RECORDS_PER_CENTER} "
+                        "--permutations 5 --audit-seed 2026 --view-batch-size 1"
                     )
                     jobs.append(job(
                         f"audit_{backbone}_{variant}_s{seed}_{dataset}", command, f"{output}/metrics.json"

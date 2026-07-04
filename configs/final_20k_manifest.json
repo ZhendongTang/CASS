@@ -1,0 +1,831 @@
+{
+  "project": "clintime_complete_evidence_v1",
+  "cwd": "/home/tang/pces_icu",
+  "conda": "base",
+  "conda_hook": "/root/anaconda3/bin/conda",
+  "gpus": [
+    0
+  ],
+  "max_parallel": 1,
+  "gpu_free_threshold_mib": 500,
+  "oom_retry": {
+    "delay": 120,
+    "max_attempts": 3
+  },
+  "other_retry": {
+    "delay": 60,
+    "max_attempts": 3
+  },
+  "phases": [
+    {
+      "name": "token_audit",
+      "depends_on": [],
+      "jobs": [
+        {
+          "id": "token_glm_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python scripts/audit_token_lengths.py --data work/events/mimic.jsonl.gz --dataset mimic --model /data/models/glm-4-9b-chat --output work/final_v1_20k/token_audit/glm/mimic.json --max-records 20000 --sample-seed 2026 --budgets 256 512 1024",
+          "expected_output": "work/final_v1_20k/token_audit/glm/mimic.json"
+        },
+        {
+          "id": "token_glm_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python scripts/audit_token_lengths.py --data work/events/eicu.jsonl.gz --dataset eicu --model /data/models/glm-4-9b-chat --output work/final_v1_20k/token_audit/glm/eicu.json --max-records 20000 --sample-seed 2026 --budgets 256 512 1024",
+          "expected_output": "work/final_v1_20k/token_audit/glm/eicu.json"
+        },
+        {
+          "id": "token_glm_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python scripts/audit_token_lengths.py --data work/events/nwicu.jsonl.gz --dataset nwicu --model /data/models/glm-4-9b-chat --output work/final_v1_20k/token_audit/glm/nwicu.json --max-records 20000 --sample-seed 2026 --budgets 256 512 1024",
+          "expected_output": "work/final_v1_20k/token_audit/glm/nwicu.json"
+        },
+        {
+          "id": "token_llama_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python scripts/audit_token_lengths.py --data work/events/mimic.jsonl.gz --dataset mimic --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/token_audit/llama/mimic.json --max-records 20000 --sample-seed 2026 --budgets 256 512 1024",
+          "expected_output": "work/final_v1_20k/token_audit/llama/mimic.json"
+        },
+        {
+          "id": "token_llama_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python scripts/audit_token_lengths.py --data work/events/eicu.jsonl.gz --dataset eicu --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/token_audit/llama/eicu.json --max-records 20000 --sample-seed 2026 --budgets 256 512 1024",
+          "expected_output": "work/final_v1_20k/token_audit/llama/eicu.json"
+        },
+        {
+          "id": "token_llama_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python scripts/audit_token_lengths.py --data work/events/nwicu.jsonl.gz --dataset nwicu --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/token_audit/llama/nwicu.json --max-records 20000 --sample-seed 2026 --budgets 256 512 1024",
+          "expected_output": "work/final_v1_20k/token_audit/llama/nwicu.json"
+        },
+        {
+          "id": "token_gemma_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python scripts/audit_token_lengths.py --data work/events/mimic.jsonl.gz --dataset mimic --model /data/models/gemma-2-9b --output work/final_v1_20k/token_audit/gemma/mimic.json --max-records 20000 --sample-seed 2026 --budgets 256 512 1024",
+          "expected_output": "work/final_v1_20k/token_audit/gemma/mimic.json"
+        },
+        {
+          "id": "token_gemma_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python scripts/audit_token_lengths.py --data work/events/eicu.jsonl.gz --dataset eicu --model /data/models/gemma-2-9b --output work/final_v1_20k/token_audit/gemma/eicu.json --max-records 20000 --sample-seed 2026 --budgets 256 512 1024",
+          "expected_output": "work/final_v1_20k/token_audit/gemma/eicu.json"
+        },
+        {
+          "id": "token_gemma_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python scripts/audit_token_lengths.py --data work/events/nwicu.jsonl.gz --dataset nwicu --model /data/models/gemma-2-9b --output work/final_v1_20k/token_audit/gemma/nwicu.json --max-records 20000 --sample-seed 2026 --budgets 256 512 1024",
+          "expected_output": "work/final_v1_20k/token_audit/gemma/nwicu.json"
+        }
+      ]
+    },
+    {
+      "name": "matched_training",
+      "depends_on": [
+        "token_audit"
+      ],
+      "jobs": [
+        {
+          "id": "train_glm_flat_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/flat_seed42 --variant flat --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/flat_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_glm_xml_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/xml_seed42 --variant xml --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/xml_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_glm_xml_aug_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/xml_aug_seed42 --variant xml_aug --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/xml_aug_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_glm_xml_kl_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/xml_kl_seed42 --variant xml_kl --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/xml_kl_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_glm_flat_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/flat_seed43 --variant flat --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/flat_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_glm_xml_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/xml_seed43 --variant xml --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/xml_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_glm_xml_aug_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/xml_aug_seed43 --variant xml_aug --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/xml_aug_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_glm_xml_kl_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/xml_kl_seed43 --variant xml_kl --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/xml_kl_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_glm_flat_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/flat_seed44 --variant flat --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/flat_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_glm_xml_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/xml_seed44 --variant xml --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/xml_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_glm_xml_aug_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/xml_aug_seed44 --variant xml_aug --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/xml_aug_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_glm_xml_kl_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/glm-4-9b-chat --output work/final_v1_20k/main/glm/xml_kl_seed44 --variant xml_kl --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/glm/xml_kl_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_llama_flat_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/flat_seed42 --variant flat --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/flat_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_llama_xml_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/xml_seed42 --variant xml --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/xml_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_llama_xml_aug_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/xml_aug_seed42 --variant xml_aug --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/xml_aug_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_llama_xml_kl_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/xml_kl_seed42 --variant xml_kl --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/xml_kl_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_llama_flat_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/flat_seed43 --variant flat --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/flat_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_llama_xml_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/xml_seed43 --variant xml --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/xml_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_llama_xml_aug_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/xml_aug_seed43 --variant xml_aug --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/xml_aug_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_llama_xml_kl_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/xml_kl_seed43 --variant xml_kl --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/xml_kl_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_llama_flat_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/flat_seed44 --variant flat --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/flat_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_llama_xml_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/xml_seed44 --variant xml --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/xml_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_llama_xml_aug_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/xml_aug_seed44 --variant xml_aug --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/xml_aug_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_llama_xml_kl_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/Meta-Llama-3-8B --output work/final_v1_20k/main/llama/xml_kl_seed44 --variant xml_kl --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/llama/xml_kl_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_flat_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/flat_seed42 --variant flat --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/flat_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_xml_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/xml_seed42 --variant xml --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/xml_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_xml_aug_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/xml_aug_seed42 --variant xml_aug --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/xml_aug_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_xml_kl_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/xml_kl_seed42 --variant xml_kl --seed 42 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/xml_kl_seed42/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_flat_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/flat_seed43 --variant flat --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/flat_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_xml_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/xml_seed43 --variant xml --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/xml_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_xml_aug_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/xml_aug_seed43 --variant xml_aug --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/xml_aug_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_xml_kl_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/xml_kl_seed43 --variant xml_kl --seed 43 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/xml_kl_seed43/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_flat_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/flat_seed44 --variant flat --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/flat_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_xml_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/xml_seed44 --variant xml --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/xml_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_xml_aug_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/xml_aug_seed44 --variant xml_aug --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/xml_aug_seed44/train_metrics.json"
+        },
+        {
+          "id": "train_gemma_xml_kl_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm train --data work/events/mimic.jsonl.gz --model /data/models/gemma-2-9b --output work/final_v1_20k/main/gemma/xml_kl_seed44 --variant xml_kl --seed 44 --sample-seed 2026 --epochs 1 --max-length 256 --grad-accum 8 --lr 2e-5 --kl-weight 0.2 --max-train-records 20000 --max-val-records 20000 --eval-data mimic=work/events/mimic.jsonl.gz --eval-data eicu=work/events/eicu.jsonl.gz --eval-data nwicu=work/events/nwicu.jsonl.gz --max-eval-records 20000",
+          "expected_output": "work/final_v1_20k/main/gemma/xml_kl_seed44/train_metrics.json"
+        }
+      ]
+    },
+    {
+      "name": "post_training_audit",
+      "depends_on": [
+        "matched_training"
+      ],
+      "jobs": [
+        {
+          "id": "audit_glm_flat_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/flat_seed42 --output work/final_v1_20k/permutation/glm/flat_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/flat_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_flat_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/flat_seed42 --output work/final_v1_20k/permutation/glm/flat_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/flat_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_flat_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/flat_seed42 --output work/final_v1_20k/permutation/glm/flat_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/flat_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_seed42 --output work/final_v1_20k/permutation/glm/xml_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_seed42 --output work/final_v1_20k/permutation/glm/xml_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_seed42 --output work/final_v1_20k/permutation/glm/xml_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_aug_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_aug_seed42 --output work/final_v1_20k/permutation/glm/xml_aug_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_aug_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_aug_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_aug_seed42 --output work/final_v1_20k/permutation/glm/xml_aug_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_aug_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_aug_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_aug_seed42 --output work/final_v1_20k/permutation/glm/xml_aug_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_aug_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_kl_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_kl_seed42 --output work/final_v1_20k/permutation/glm/xml_kl_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_kl_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_kl_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_kl_seed42 --output work/final_v1_20k/permutation/glm/xml_kl_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_kl_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_kl_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_kl_seed42 --output work/final_v1_20k/permutation/glm/xml_kl_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_kl_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_flat_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/flat_seed43 --output work/final_v1_20k/permutation/glm/flat_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/flat_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_flat_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/flat_seed43 --output work/final_v1_20k/permutation/glm/flat_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/flat_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_flat_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/flat_seed43 --output work/final_v1_20k/permutation/glm/flat_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/flat_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_seed43 --output work/final_v1_20k/permutation/glm/xml_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_seed43 --output work/final_v1_20k/permutation/glm/xml_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_seed43 --output work/final_v1_20k/permutation/glm/xml_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_aug_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_aug_seed43 --output work/final_v1_20k/permutation/glm/xml_aug_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_aug_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_aug_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_aug_seed43 --output work/final_v1_20k/permutation/glm/xml_aug_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_aug_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_aug_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_aug_seed43 --output work/final_v1_20k/permutation/glm/xml_aug_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_aug_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_kl_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_kl_seed43 --output work/final_v1_20k/permutation/glm/xml_kl_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_kl_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_kl_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_kl_seed43 --output work/final_v1_20k/permutation/glm/xml_kl_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_kl_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_kl_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_kl_seed43 --output work/final_v1_20k/permutation/glm/xml_kl_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_kl_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_flat_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/flat_seed44 --output work/final_v1_20k/permutation/glm/flat_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/flat_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_flat_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/flat_seed44 --output work/final_v1_20k/permutation/glm/flat_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/flat_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_flat_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/flat_seed44 --output work/final_v1_20k/permutation/glm/flat_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/flat_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_seed44 --output work/final_v1_20k/permutation/glm/xml_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_seed44 --output work/final_v1_20k/permutation/glm/xml_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_seed44 --output work/final_v1_20k/permutation/glm/xml_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_aug_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_aug_seed44 --output work/final_v1_20k/permutation/glm/xml_aug_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_aug_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_aug_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_aug_seed44 --output work/final_v1_20k/permutation/glm/xml_aug_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_aug_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_aug_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_aug_seed44 --output work/final_v1_20k/permutation/glm/xml_aug_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_aug_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_kl_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_kl_seed44 --output work/final_v1_20k/permutation/glm/xml_kl_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_kl_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_kl_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_kl_seed44 --output work/final_v1_20k/permutation/glm/xml_kl_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_kl_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_glm_xml_kl_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/glm/xml_kl_seed44 --output work/final_v1_20k/permutation/glm/xml_kl_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/glm/xml_kl_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_flat_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/flat_seed42 --output work/final_v1_20k/permutation/llama/flat_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/flat_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_flat_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/flat_seed42 --output work/final_v1_20k/permutation/llama/flat_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/flat_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_flat_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/flat_seed42 --output work/final_v1_20k/permutation/llama/flat_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/flat_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_seed42 --output work/final_v1_20k/permutation/llama/xml_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_seed42 --output work/final_v1_20k/permutation/llama/xml_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_seed42 --output work/final_v1_20k/permutation/llama/xml_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_aug_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_aug_seed42 --output work/final_v1_20k/permutation/llama/xml_aug_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_aug_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_aug_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_aug_seed42 --output work/final_v1_20k/permutation/llama/xml_aug_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_aug_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_aug_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_aug_seed42 --output work/final_v1_20k/permutation/llama/xml_aug_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_aug_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_kl_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_kl_seed42 --output work/final_v1_20k/permutation/llama/xml_kl_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_kl_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_kl_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_kl_seed42 --output work/final_v1_20k/permutation/llama/xml_kl_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_kl_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_kl_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_kl_seed42 --output work/final_v1_20k/permutation/llama/xml_kl_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_kl_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_flat_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/flat_seed43 --output work/final_v1_20k/permutation/llama/flat_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/flat_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_flat_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/flat_seed43 --output work/final_v1_20k/permutation/llama/flat_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/flat_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_flat_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/flat_seed43 --output work/final_v1_20k/permutation/llama/flat_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/flat_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_seed43 --output work/final_v1_20k/permutation/llama/xml_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_seed43 --output work/final_v1_20k/permutation/llama/xml_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_seed43 --output work/final_v1_20k/permutation/llama/xml_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_aug_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_aug_seed43 --output work/final_v1_20k/permutation/llama/xml_aug_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_aug_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_aug_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_aug_seed43 --output work/final_v1_20k/permutation/llama/xml_aug_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_aug_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_aug_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_aug_seed43 --output work/final_v1_20k/permutation/llama/xml_aug_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_aug_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_kl_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_kl_seed43 --output work/final_v1_20k/permutation/llama/xml_kl_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_kl_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_kl_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_kl_seed43 --output work/final_v1_20k/permutation/llama/xml_kl_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_kl_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_kl_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_kl_seed43 --output work/final_v1_20k/permutation/llama/xml_kl_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_kl_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_flat_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/flat_seed44 --output work/final_v1_20k/permutation/llama/flat_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/flat_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_flat_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/flat_seed44 --output work/final_v1_20k/permutation/llama/flat_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/flat_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_flat_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/flat_seed44 --output work/final_v1_20k/permutation/llama/flat_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/flat_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_seed44 --output work/final_v1_20k/permutation/llama/xml_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_seed44 --output work/final_v1_20k/permutation/llama/xml_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_seed44 --output work/final_v1_20k/permutation/llama/xml_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_aug_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_aug_seed44 --output work/final_v1_20k/permutation/llama/xml_aug_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_aug_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_aug_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_aug_seed44 --output work/final_v1_20k/permutation/llama/xml_aug_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_aug_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_aug_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_aug_seed44 --output work/final_v1_20k/permutation/llama/xml_aug_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_aug_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_kl_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_kl_seed44 --output work/final_v1_20k/permutation/llama/xml_kl_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_kl_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_kl_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_kl_seed44 --output work/final_v1_20k/permutation/llama/xml_kl_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_kl_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_llama_xml_kl_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/llama/xml_kl_seed44 --output work/final_v1_20k/permutation/llama/xml_kl_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/llama/xml_kl_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_flat_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/flat_seed42 --output work/final_v1_20k/permutation/gemma/flat_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/flat_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_flat_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/flat_seed42 --output work/final_v1_20k/permutation/gemma/flat_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/flat_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_flat_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/flat_seed42 --output work/final_v1_20k/permutation/gemma/flat_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/flat_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_seed42 --output work/final_v1_20k/permutation/gemma/xml_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_seed42 --output work/final_v1_20k/permutation/gemma/xml_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_seed42 --output work/final_v1_20k/permutation/gemma/xml_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_aug_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_aug_seed42 --output work/final_v1_20k/permutation/gemma/xml_aug_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_aug_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_aug_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_aug_seed42 --output work/final_v1_20k/permutation/gemma/xml_aug_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_aug_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_aug_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_aug_seed42 --output work/final_v1_20k/permutation/gemma/xml_aug_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_aug_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_kl_s42_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_kl_seed42 --output work/final_v1_20k/permutation/gemma/xml_kl_seed42/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_kl_seed42/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_kl_s42_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_kl_seed42 --output work/final_v1_20k/permutation/gemma/xml_kl_seed42/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_kl_seed42/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_kl_s42_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_kl_seed42 --output work/final_v1_20k/permutation/gemma/xml_kl_seed42/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_kl_seed42/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_flat_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/flat_seed43 --output work/final_v1_20k/permutation/gemma/flat_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/flat_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_flat_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/flat_seed43 --output work/final_v1_20k/permutation/gemma/flat_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/flat_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_flat_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/flat_seed43 --output work/final_v1_20k/permutation/gemma/flat_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/flat_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_seed43 --output work/final_v1_20k/permutation/gemma/xml_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_seed43 --output work/final_v1_20k/permutation/gemma/xml_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_seed43 --output work/final_v1_20k/permutation/gemma/xml_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_aug_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_aug_seed43 --output work/final_v1_20k/permutation/gemma/xml_aug_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_aug_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_aug_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_aug_seed43 --output work/final_v1_20k/permutation/gemma/xml_aug_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_aug_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_aug_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_aug_seed43 --output work/final_v1_20k/permutation/gemma/xml_aug_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_aug_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_kl_s43_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_kl_seed43 --output work/final_v1_20k/permutation/gemma/xml_kl_seed43/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_kl_seed43/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_kl_s43_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_kl_seed43 --output work/final_v1_20k/permutation/gemma/xml_kl_seed43/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_kl_seed43/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_kl_s43_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_kl_seed43 --output work/final_v1_20k/permutation/gemma/xml_kl_seed43/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_kl_seed43/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_flat_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/flat_seed44 --output work/final_v1_20k/permutation/gemma/flat_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/flat_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_flat_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/flat_seed44 --output work/final_v1_20k/permutation/gemma/flat_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/flat_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_flat_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/flat_seed44 --output work/final_v1_20k/permutation/gemma/flat_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/flat_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_seed44 --output work/final_v1_20k/permutation/gemma/xml_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_seed44 --output work/final_v1_20k/permutation/gemma/xml_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_seed44 --output work/final_v1_20k/permutation/gemma/xml_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_aug_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_aug_seed44 --output work/final_v1_20k/permutation/gemma/xml_aug_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_aug_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_aug_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_aug_seed44 --output work/final_v1_20k/permutation/gemma/xml_aug_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_aug_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_aug_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_aug_seed44 --output work/final_v1_20k/permutation/gemma/xml_aug_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_aug_seed44/nwicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_kl_s44_mimic",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/mimic.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_kl_seed44 --output work/final_v1_20k/permutation/gemma/xml_kl_seed44/mimic --dataset mimic --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_kl_seed44/mimic/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_kl_s44_eicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/eicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_kl_seed44 --output work/final_v1_20k/permutation/gemma/xml_kl_seed44/eicu --dataset eicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_kl_seed44/eicu/metrics.json"
+        },
+        {
+          "id": "audit_gemma_xml_kl_s44_nwicu",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python -m pces_icu.multicenter_llm audit-permutation --data work/events/nwicu.jsonl.gz --checkpoint work/final_v1_20k/main/gemma/xml_kl_seed44 --output work/final_v1_20k/permutation/gemma/xml_kl_seed44/nwicu --dataset nwicu --max-records 20000 --permutations 5 --audit-seed 2026 --view-batch-size 1",
+          "expected_output": "work/final_v1_20k/permutation/gemma/xml_kl_seed44/nwicu/metrics.json"
+        }
+      ]
+    },
+    {
+      "name": "sequential_baseline",
+      "depends_on": [
+        "post_training_audit"
+      ],
+      "jobs": [
+        {
+          "id": "event_transformer_s42",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && pces-icu train --trainer transformer --data work/events/mimic.jsonl.gz --config configs/event_transformer_seed42.json --output-dir work/final_v1_20k/baselines/event_transformer_seed42 && pces-icu evaluate-checkpoint --trainer transformer --data work/events/eicu.jsonl.gz --model-dir work/final_v1_20k/baselines/event_transformer_seed42 --config configs/event_transformer_seed42.json --split test --output-dir work/final_v1_20k/baselines/event_transformer_seed42/evaluation/eicu && pces-icu evaluate-checkpoint --trainer transformer --data work/events/nwicu.jsonl.gz --model-dir work/final_v1_20k/baselines/event_transformer_seed42 --config configs/event_transformer_seed42.json --split test --output-dir work/final_v1_20k/baselines/event_transformer_seed42/evaluation/nwicu",
+          "expected_output": "work/final_v1_20k/baselines/event_transformer_seed42/evaluation/nwicu/metrics.json"
+        },
+        {
+          "id": "event_transformer_s43",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && pces-icu train --trainer transformer --data work/events/mimic.jsonl.gz --config configs/event_transformer_seed43.json --output-dir work/final_v1_20k/baselines/event_transformer_seed43 && pces-icu evaluate-checkpoint --trainer transformer --data work/events/eicu.jsonl.gz --model-dir work/final_v1_20k/baselines/event_transformer_seed43 --config configs/event_transformer_seed43.json --split test --output-dir work/final_v1_20k/baselines/event_transformer_seed43/evaluation/eicu && pces-icu evaluate-checkpoint --trainer transformer --data work/events/nwicu.jsonl.gz --model-dir work/final_v1_20k/baselines/event_transformer_seed43 --config configs/event_transformer_seed43.json --split test --output-dir work/final_v1_20k/baselines/event_transformer_seed43/evaluation/nwicu",
+          "expected_output": "work/final_v1_20k/baselines/event_transformer_seed43/evaluation/nwicu/metrics.json"
+        },
+        {
+          "id": "event_transformer_s44",
+          "cmd": "source .venv/bin/activate && export PYTHONPATH=src TRANSFORMERS_NO_TF=1 USE_TF=0 PYTHONUNBUFFERED=1 TOKENIZERS_PARALLELISM=false PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && pces-icu train --trainer transformer --data work/events/mimic.jsonl.gz --config configs/event_transformer_seed44.json --output-dir work/final_v1_20k/baselines/event_transformer_seed44 && pces-icu evaluate-checkpoint --trainer transformer --data work/events/eicu.jsonl.gz --model-dir work/final_v1_20k/baselines/event_transformer_seed44 --config configs/event_transformer_seed44.json --split test --output-dir work/final_v1_20k/baselines/event_transformer_seed44/evaluation/eicu && pces-icu evaluate-checkpoint --trainer transformer --data work/events/nwicu.jsonl.gz --model-dir work/final_v1_20k/baselines/event_transformer_seed44 --config configs/event_transformer_seed44.json --split test --output-dir work/final_v1_20k/baselines/event_transformer_seed44/evaluation/nwicu",
+          "expected_output": "work/final_v1_20k/baselines/event_transformer_seed44/evaluation/nwicu/metrics.json"
+        }
+      ]
+    }
+  ]
+}

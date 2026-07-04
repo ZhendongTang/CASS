@@ -19,12 +19,14 @@ from .serialize import (
     ClinTimeFeatureSummaryConfig,
     ClinTimeJSONConfig,
     ClinTimeXMLConfig,
+    MEDSConfig,
     SerializationConfig,
     serialize_clintime_compact,
     serialize_clintime_feature_summary,
     serialize_clintime_json,
     serialize_clintime_xml,
     serialize_events,
+    serialize_meds_events,
     stable_view_seed,
 )
 
@@ -118,6 +120,8 @@ def _text(
             SerializationConfig(permute_within_sets=permute, max_events=128, max_chars=12_000),
             view_seed,
         )
+    elif variant == "meds":
+        body = serialize_meds_events(record.events or [], MEDSConfig(max_events=160, max_chars=6_000))
     elif variant in COMPACT_VARIANTS:
         permute = _uses_two_views(variant) if force_permutation is None else force_permutation
         body = serialize_clintime_compact(
@@ -236,15 +240,33 @@ def _load_base(model_name: str, training: bool):
     model_kwargs: dict[str, Any] = {
         "trust_remote_code": True,
         "num_labels": 1,
-        "device_map": {"": "cuda:0"},
         "torch_dtype": torch.bfloat16,
     }
     if quant is not None:
         model_kwargs["quantization_config"] = quant
-    model = AutoModelForSequenceClassification.from_pretrained(
-        model_name,
-        **model_kwargs,
-    )
+        model_kwargs["device_map"] = {"": 0}
+        # Transformers 4.44 + Accelerate 1.14 can otherwise route recent bnb
+        # models through a single-device `.to()` call, which bnb forbids.
+        import transformers.modeling_utils as modeling_utils
+
+        original_dispatch_model = modeling_utils.dispatch_model
+
+        def _dispatch_model_with_hooks(*args: Any, **kwargs: Any):
+            kwargs["force_hooks"] = True
+            return original_dispatch_model(*args, **kwargs)
+
+        modeling_utils.dispatch_model = _dispatch_model_with_hooks
+    else:
+        original_dispatch_model = None
+        model_kwargs["device_map"] = {"": "cuda:0"}
+    try:
+        model = AutoModelForSequenceClassification.from_pretrained(
+            model_name,
+            **model_kwargs,
+        )
+    finally:
+        if original_dispatch_model is not None:
+            modeling_utils.dispatch_model = original_dispatch_model
     layout = _model_layout(model)
     # ChatGLM's remote-code sequence classifier can be absent and left uninitialized.
     # Reinitializing every downstream head also keeps backbone comparisons reproducible.
@@ -271,6 +293,70 @@ def _load_base(model_name: str, training: bool):
             ),
         )
     return tokenizer, model, layout
+
+
+def _restore_saved_classification_heads(model, adapter_dir: Path) -> list[str]:
+    """Force saved sequence-classification heads onto PEFT-wrapped backbones.
+
+    ChatGLM remote-code classifiers expose a `classifier_head` module that PEFT
+    records via `modules_to_save`, but reloads can leave the forward path using a
+    freshly initialized head.  We explicitly copy any saved `score`/`classifier`
+    tensors into the live module after `PeftModel.from_pretrained`.
+    """
+    adapter_path = adapter_dir / "adapter_model.safetensors"
+    if not adapter_path.exists():
+        return []
+    try:
+        import torch
+        from safetensors.torch import load_file
+    except Exception:
+        return []
+
+    state = load_file(str(adapter_path), device="cpu")
+    restored: list[str] = []
+    modules = dict(model.named_modules())
+    active_adapter = getattr(model, "active_adapter", "default")
+    if callable(active_adapter):
+        active_adapter = active_adapter()
+    for key, tensor in state.items():
+        if not (key.endswith(".weight") or key.endswith(".bias")):
+            continue
+        if not any(name in key for name in ("classifier_head", "classification_head", "classifier", "score")):
+            continue
+        module_name, parameter_name = key.rsplit(".", 1)
+        module = modules.get(module_name)
+        if module is None:
+            # PEFT may expose modules with or without the leading `base_model.model`.
+            suffix = module_name.split(".", 2)[-1]
+            matches = [value for name, value in modules.items() if name == suffix or name.endswith("." + suffix)]
+            module = matches[0] if matches else None
+        if module is None:
+            continue
+        target = module
+        modules_to_save = getattr(module, "modules_to_save", None)
+        if modules_to_save is not None:
+            if active_adapter in modules_to_save:
+                target = modules_to_save[active_adapter]
+            elif len(modules_to_save):
+                target = next(iter(modules_to_save.values()))
+        parameter = getattr(target, parameter_name, None)
+        if parameter is None or tuple(parameter.shape) != tuple(tensor.shape):
+            continue
+        with torch.no_grad():
+            parameter.copy_(tensor.to(device=parameter.device, dtype=parameter.dtype))
+        restored.append(key)
+    return restored
+
+
+def _load_adapter(model, checkpoint: Path):
+    from peft import PeftModel
+
+    adapter_dir = checkpoint / "adapter"
+    model = PeftModel.from_pretrained(model, adapter_dir)
+    restored = _restore_saved_classification_heads(model, adapter_dir)
+    if restored:
+        print(json.dumps({"restored_classification_heads": restored}), flush=True)
+    return model
 
 
 def _batch(tokenizer, texts: list[str], max_length: int):
@@ -369,6 +455,7 @@ def train(args: argparse.Namespace) -> None:
     model.train()
     steps = 0
     losses: list[float] = []
+    step_losses: list[float] = []
     positives = sum(record.label for record in train_records)
     negatives = len(train_records) - positives
     if args.pos_weight is not None:
@@ -414,11 +501,15 @@ def train(args: argparse.Namespace) -> None:
             (loss / args.grad_accum).backward()
             losses.append(float(loss.detach().cpu()))
             if position % args.grad_accum == 0 or position == len(order):
+                recent_micro_losses = losses[-min(args.grad_accum, len(losses)) :]
+                step_loss = float(np.mean(recent_micro_losses)) if recent_micro_losses else float(loss.detach().cpu())
                 torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
                 optimizer.step()
                 optimizer.zero_grad(set_to_none=True)
                 steps += 1
-                print(json.dumps({"epoch": epoch + 1, "step": steps, "loss": round(float(loss), 6)}), flush=True)
+                step_losses.append(step_loss)
+                log_entry = {"epoch": epoch + 1, "step": steps, "loss": round(float(loss), 6)}
+                print(json.dumps(log_entry), flush=True)
     out = Path(args.output)
     out.mkdir(parents=True, exist_ok=True)
     model.save_pretrained(out / "adapter")
@@ -449,6 +540,7 @@ def train(args: argparse.Namespace) -> None:
         "val_records": len(val_records),
         "optimizer_steps": steps,
         "mean_train_loss": float(np.mean(losses)),
+        "mean_optimizer_step_loss": float(np.mean(step_losses)) if step_losses else math.nan,
         "elapsed_seconds": time.time() - started,
         "max_gpu_memory_mb": torch.cuda.max_memory_allocated() // 2**20,
         "model_layout": layout,
@@ -485,15 +577,15 @@ def train(args: argparse.Namespace) -> None:
 
 
 def evaluate(args: argparse.Namespace) -> None:
-    from peft import PeftModel
-
-    run_config = json.loads((Path(args.checkpoint) / "run_config.json").read_text(encoding="utf-8"))
+    checkpoint = Path(args.checkpoint)
+    run_config = json.loads((checkpoint / "run_config.json").read_text(encoding="utf-8"))
     variant, seed = run_config["variant"], int(run_config["seed"])
     sample_seed = int(run_config.get("sample_seed", seed))
     task_prompt = run_config.get("task_prompt", DEFAULT_TASK_PROMPT)
     records = _records(args.data, args.split, args.max_eval_records, sample_seed + 2)
+    seed_everything(seed)
     tokenizer, model, _ = _load_base(run_config["model"], training=False)
-    model = PeftModel.from_pretrained(model, Path(args.checkpoint) / "adapter")
+    model = _load_adapter(model, checkpoint)
     probabilities = _predict(model, tokenizer, records, variant, seed, int(run_config["max_length"]), task_prompt)
     metrics = binary_metrics([record.label for record in records], probabilities)
     metrics.update({"dataset": args.dataset, "split": args.split, "variant": variant, "seed": seed})
@@ -510,16 +602,15 @@ def evaluate(args: argparse.Namespace) -> None:
 
 
 def audit_permutation(args: argparse.Namespace) -> None:
-    from peft import PeftModel
-
     checkpoint = Path(args.checkpoint)
     run_config = json.loads((checkpoint / "run_config.json").read_text(encoding="utf-8"))
     variant, seed = run_config["variant"], int(run_config["seed"])
     sample_seed = int(run_config.get("sample_seed", seed))
     task_prompt = run_config.get("task_prompt", DEFAULT_TASK_PROMPT)
     records = _records(args.data, args.split, args.max_records, sample_seed + 2)
+    seed_everything(seed)
     tokenizer, model, _ = _load_base(run_config["model"], training=False)
-    model = PeftModel.from_pretrained(model, checkpoint / "adapter")
+    model = _load_adapter(model, checkpoint)
     max_length = int(run_config["max_length"])
     canonical = _predict(model, tokenizer, records, variant, seed, max_length, task_prompt)
     matrix = _predict_permutations(
@@ -578,7 +669,7 @@ def parser() -> argparse.ArgumentParser:
             "flat", "xml", "xml_aug", "xml_kl",
             "compact", "compact_aug", "compact_kl",
             "json", "json_aug", "json_kl",
-            "summary", "summary_wide",
+            "summary", "summary_wide", "meds",
         ],
         required=True,
     )
