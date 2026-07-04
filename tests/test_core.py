@@ -16,8 +16,9 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from pces_icu.cohort import build_eicu_cohort, build_mimic_like_cohort
 from pces_icu.metrics import auroc, average_precision, binary_metrics, permutation_metrics
-from pces_icu.io import write_json
+from pces_icu.io import read_jsonl, write_json, write_jsonl
 from pces_icu.schema import Event, PatientRecord, canonical_concept, canonical_intervention, validate_events
+from pces_icu.serialization_pipeline import build_serialization_pipeline
 from pces_icu.serialize import (
     ClinTimeCompactConfig,
     ClinTimeJSONConfig,
@@ -125,6 +126,27 @@ class SerializerTests(unittest.TestCase):
         a = serialize_clintime_json(self.events, config, seed=1)
         b = serialize_clintime_json(self.events, config, seed=2)
         self.assertEqual(sorted(extract_event_ids(a)), sorted(extract_event_ids(b)))
+
+    def test_serialization_pipeline_writes_all_public_formats(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            records = [
+                PatientRecord("p1", "s1", 1, "mimic", split="train", events=self.events),
+                PatientRecord("p2", "s2", 0, "mimic", split="test", events=self.events[:1]),
+            ]
+            events_path = root / "events.jsonl.gz"
+            write_jsonl(events_path, (record.to_dict() for record in records))
+            manifest = build_serialization_pipeline(events_path, root / "serialized")
+            self.assertEqual(manifest["formats"], ["cass", "json", "xml", "meds"])
+            for fmt in manifest["formats"]:
+                rows = list(read_jsonl(root / "serialized" / f"{fmt}.jsonl.gz"))
+                self.assertEqual(len(rows), 2)
+                self.assertEqual(rows[0]["format"], fmt)
+                self.assertIn("text", rows[0])
+            self.assertIn("ClinTime-FeatureSummary/1", list(read_jsonl(root / "serialized" / "cass.jsonl.gz"))[0]["text"])
+            self.assertIn('"fmt":"CTJ1"', list(read_jsonl(root / "serialized" / "json.jsonl.gz"))[0]["text"])
+            self.assertIn("<icu_stream", list(read_jsonl(root / "serialized" / "xml.jsonl.gz"))[0]["text"])
+            self.assertIn("MEDS-like event table", list(read_jsonl(root / "serialized" / "meds.jsonl.gz"))[0]["text"])
 
 
 class MetricTests(unittest.TestCase):

@@ -126,6 +126,24 @@ pces-icu audit-events --data work/events/eicu.jsonl.gz --output work/events/eicu
 pces-icu audit-events --data work/events/nwicu.jsonl.gz --output work/events/nwicu.audit.json
 ```
 
+Build the four public serialization views from the same canonical event files:
+
+```bash
+pces-icu build-serializations \
+  --events work/events/mimic.jsonl.gz \
+  --output-root work/serializations/mimic
+
+pces-icu build-serializations \
+  --events work/events/eicu.jsonl.gz \
+  --output-root work/serializations/eicu
+
+pces-icu build-serializations \
+  --events work/events/nwicu.jsonl.gz \
+  --output-root work/serializations/nwicu
+```
+
+Each command writes `cass.jsonl.gz`, `json.jsonl.gz`, `xml.jsonl.gz`, `meds.jsonl.gz`, and `manifest.json` under the selected output directory. The CASS view uses the paper's compact feature-summary serializer, JSON/XML use canonical non-permuted ClinTime views, and MEDS uses the row-wise long-table baseline. To materialize a subset, repeat `--format`, for example `--format cass --format json`.
+
 Optional derived tasks use the same event schema:
 
 ```bash

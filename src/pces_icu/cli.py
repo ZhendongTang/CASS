@@ -11,6 +11,7 @@ from .extract import extract_eicu_events, extract_mimic_like_events
 from .io import read_jsonl, write_json
 from .metrics import binary_metrics
 from .schema import PatientRecord, validate_events
+from .serialization_pipeline import SERIALIZATION_FORMATS, build_serialization_pipeline
 from .splits import assert_disjoint, assign_hospital_splits, assign_patient_splits
 from .synthetic import write_synthetic
 from .tasks import build_future_intervention_task, build_los_binary_task
@@ -117,6 +118,20 @@ def command_build_future_intervention_task(args) -> None:
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
+def command_build_serializations(args) -> None:
+    formats = args.format or list(SERIALIZATION_FORMATS)
+    manifest = build_serialization_pipeline(
+        args.events,
+        args.output_root,
+        formats,
+        args.seed,
+        args.include_prompt,
+        args.task_prompt,
+        args.manifest_name,
+    )
+    print(json.dumps(manifest, ensure_ascii=False, indent=2))
+
+
 def command_train(args) -> None:
     config = _config(args.config) if args.config else {}
     if args.trainer == "baseline":
@@ -181,6 +196,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--horizon-hours", type=float, default=24.0)
     p.add_argument("--keep-prevalent", action="store_true", help="Keep patients already receiving a target intervention before the landmark")
     p.set_defaults(func=command_build_future_intervention_task)
+
+    p = sub.add_parser("build-serializations", help="Materialize JSON, XML, CASS, and MEDS text-view JSONL files")
+    p.add_argument("--events", required=True, help="Canonical patient event JSONL(.gz) built by build-events")
+    p.add_argument("--output-root", required=True, help="Directory for derived serializer JSONL files")
+    p.add_argument("--format", action="append", choices=SERIALIZATION_FORMATS, help="Serialization format to build; repeatable; defaults to all formats")
+    p.add_argument("--seed", type=int, default=2026)
+    p.add_argument("--include-prompt", action="store_true", help="Prefix each serialized text with the task prompt")
+    p.add_argument("--task-prompt", default="", help="Task prompt used only with --include-prompt")
+    p.add_argument("--manifest-name", default="manifest.json")
+    p.set_defaults(func=command_build_serializations)
 
     p = sub.add_parser("train", help="Train a baseline, structured Transformer, or LLM")
     p.add_argument("--trainer", choices=["baseline", "transformer", "llm"], required=True)
