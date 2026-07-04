@@ -7,7 +7,6 @@ from pathlib import Path
 import pandas as pd
 
 from .cohort import build_eicu_cohort, build_mimic_like_cohort, cohort_summary
-from .deepseek import run_deepseek_pilot, run_deepseek_summary_pilot, run_deepseek_txml_pilot
 from .extract import extract_eicu_events, extract_mimic_like_events
 from .io import read_jsonl, write_json
 from .metrics import binary_metrics
@@ -140,36 +139,6 @@ def command_evaluate_checkpoint(args) -> None:
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
-def command_deepseek_pilot(args) -> None:
-    result = run_deepseek_pilot(
-        args.data, args.output_dir, args.split, args.max_records, args.permutations, args.seed,
-        args.workers, args.model, args.max_events, args.max_chars,
-    )
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-
-
-def command_deepseek_txml_pilot(args) -> None:
-    result = run_deepseek_txml_pilot(
-        args.data, args.output_dir, args.split, args.max_records, args.permutations, args.seed,
-        args.workers, args.model, args.max_nodes, args.max_chars, args.bucket_minutes, args.canonical_order,
-    )
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-
-
-def command_deepseek_summary_pilot(args) -> None:
-    if args.task_prompt:
-        task_prompt = args.task_prompt
-    elif args.task_prompt_file:
-        task_prompt = Path(args.task_prompt_file).read_text(encoding="utf-8")
-    else:
-        raise SystemExit("--task-prompt or --task-prompt-file is required")
-    result = run_deepseek_summary_pilot(
-        args.data, args.output_dir, task_prompt, args.split, args.max_records, args.seed,
-        args.workers, args.model, args.max_rows, args.max_chars,
-    )
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pces-icu", description="PCES-ICU experiment CLI")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -228,30 +197,6 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--config"); p.add_argument("--split", default="test")
     p.set_defaults(func=command_evaluate_checkpoint)
 
-    p = sub.add_parser("deepseek-pilot", help="Run zero-shot flat-vs-PCES format and permutation pilot through DeepSeek API")
-    p.add_argument("--data", required=True); p.add_argument("--output-dir", required=True); p.add_argument("--split", default="test")
-    p.add_argument("--max-records", type=int, default=100); p.add_argument("--permutations", type=int, default=3)
-    p.add_argument("--seed", type=int, default=2026); p.add_argument("--workers", type=int, default=4)
-    p.add_argument("--model", default="deepseek-chat"); p.add_argument("--max-events", type=int, default=128); p.add_argument("--max-chars", type=int, default=12000)
-    p.set_defaults(func=command_deepseek_pilot)
-
-    p = sub.add_parser("deepseek-txml-pilot", help="Run ClinTime-XML permutation-marginalized pilot through DeepSeek API")
-    p.add_argument("--data", required=True); p.add_argument("--output-dir", required=True); p.add_argument("--split", default="test")
-    p.add_argument("--max-records", type=int, default=100); p.add_argument("--permutations", type=int, default=3)
-    p.add_argument("--seed", type=int, default=2026); p.add_argument("--workers", type=int, default=4)
-    p.add_argument("--model", default="deepseek-chat"); p.add_argument("--max-nodes", type=int, default=128)
-    p.add_argument("--max-chars", type=int, default=12000); p.add_argument("--bucket-minutes", type=int, default=60)
-    p.add_argument("--canonical-order", action="store_true")
-    p.set_defaults(func=command_deepseek_txml_pilot)
-
-    p = sub.add_parser("deepseek-summary-pilot", help="Run ClinTime-FeatureSummary zero-shot pilot through DeepSeek API")
-    p.add_argument("--data", required=True); p.add_argument("--output-dir", required=True); p.add_argument("--split", default="test")
-    p.add_argument("--max-records", type=int, default=100)
-    p.add_argument("--seed", type=int, default=2026); p.add_argument("--workers", type=int, default=4)
-    p.add_argument("--model", default="deepseek-chat")
-    p.add_argument("--max-rows", type=int, default=80); p.add_argument("--max-chars", type=int, default=3000)
-    p.add_argument("--task-prompt"); p.add_argument("--task-prompt-file")
-    p.set_defaults(func=command_deepseek_summary_pilot)
     return parser
 
 
